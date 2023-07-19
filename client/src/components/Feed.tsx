@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
+import { TextField, Button, Stack, Grid, Card, CardContent, Typography } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 async function getFeed(feed_idx, fetch_params) {
     let token = Cookies.get("user")
@@ -29,7 +31,7 @@ async function insertFeed(content) {
             "Content-Type": "application/x-www-form-urlencoded",
             "x-access-token": token
         },
-        body: `content="${content}"`
+        body: `content=${content}`
     });
 
     let data = response.json();
@@ -66,6 +68,27 @@ async function insertFeed(content) {
 
 function Feed() {
     const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: ''}])
+    const [isLogin, setLoginStatus] = useState(false);
+
+    const checkLogin = () => {
+        let token = Cookies.get("user")
+        try {
+            let decoded = JSON.parse(atob(token.split('.')[1]));
+            return {
+                isVaild: true,
+                decoded: decoded
+            }
+        } catch (error) {
+            return {
+                isVaild: false
+            }
+        }
+    }
+
+    useEffect(() => {
+        let loginStatus = checkLogin()
+        setLoginStatus(loginStatus.isVaild)
+    }, []);
 
     useEffect(() => {
         const loadData = async () => {
@@ -80,17 +103,43 @@ function Feed() {
         loadData()
     }, [])
 
+    if (isLogin) {
+        return (
+            <Grid container spacing={3}>
+            <Grid item xs md>
+            </Grid>
+            <Grid item xs={10} md={6}>
+                <FeedInput></FeedInput>
+                {feeds.map(feed => (
+                    <div>
+                        <FeedBody><b>{feed.owner}</b>  {feed.content}</FeedBody>
+                        
+                    </div>
+                ))}
+            </Grid>
+            <Grid item xs md>
+            </Grid>
+            </Grid>
+        );
+    }
+
     return (
-        <div>
-            <FeedInput></FeedInput>
+        <Grid container sx={{ marginTop: "1rem" }} spacing={3}>
+        <Grid item xs md>
+        </Grid>
+        <Grid item xs={10} md={6}>
             {feeds.map(feed => (
                 <div>
-                    {feed.idx} {feed.content} {feed.owner} {feed.date}
+                    <FeedBody> <b>{feed.owner}</b> {feed.content}</FeedBody>
+                    
                 </div>
             ))}
-            
-        </div>
+        </Grid>
+        <Grid item xs md>
+        </Grid>
+        </Grid>
     );
+
 }
 
 function FeedInput() {
@@ -102,14 +151,37 @@ function FeedInput() {
 
     const handleClick = () => {
         insertFeed(input)
+        setInput('')
+
     }
 
     return (
-        <div>
-            <textarea onChange={handleChange} value={input}></textarea>
-            <button className="btn btn-primary" onClick={handleClick}>Submit</button>            
-        </div>
+        <Stack sx={{ marginTop: "1rem", marginBottom: "1rem" }} spacing={1}>
+            <TextField
+                id="outlined-textarea"
+                label="Feed"
+                placeholder="input text..." 
+                onChange={handleChange} 
+                value={input}
+                multiline
+            />
+            <Button variant="contained" onClick={handleClick}><SendIcon /> </Button>
+
+        </Stack>
     );
+}
+
+function FeedBody({ children }) {
+    return (
+        <Card sx={{ minWidth: 275, marginBottom: '1rem' }}>
+            <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    {children}
+
+                </Typography>
+            </CardContent>
+        </Card>
+    )
 }
   
 export default Feed;
