@@ -1,27 +1,50 @@
 import React from "react";
+import { Button, Box, Grid, Typography, ThemeProvider } from '@mui/material';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
+});
 
 function NotFound() {
   function handleClickHome() {
     location.href = '/'
   }
-    return (
-        <div className="container h-100 ">
-        <div className="row h-100 ">
-          <div className="col-lg-6 col-xl-6 mx-auto h-100">
-            <div className="h-100 flex-row d-flex justify-content-center align-items-center overflow-hidden text-center">
-              <div className="card-body p-4 p-sm-5">
-                <h2 className="text-center mb-3 text-title">오 이게 무슨일이죠..?</h2>
-                <h6 className="text-center mb-4 text-secondary">페이지를 표시하지 못했어요ㅠㅠ </h6>
-                <button className="btn btn-blue-tint" onClick={handleClickHome}>홈으로</button>
 
-    
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ minHeight: '100vh' }}>
+
+      <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
+        <ThemeProvider theme={theme}>
+          <Typography variant="h3" sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>오 이게 무슨일이죠..?</Typography>
+          <Typography variant="h6"sx={{ marginBottom: '1.7rem', color: 'text.secondary' }} >페이지를 표시하지 못했어요ㅠㅠ </Typography>
+        </ThemeProvider>
+
+
+        <Button variant="contained" onClick={handleClickHome}>홈으로 </Button>
+      </Box>
+  </Grid>
+
+  );
+}
   
-  export default NotFound;
+export default NotFound;

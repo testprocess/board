@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
+import { Button, Box, Grid, TextField, Stack } from '@mui/material';
+
 
 function Signup() {
 
@@ -132,64 +134,39 @@ function Signup() {
   };
 
     return (
+
+      <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ minHeight: '100vh' }}>
+
+        <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
+
+          <h5 className="card-title text-center mb-5 fw-light fs-5">회원가입</h5>
+
+          <Stack spacing={2} sx={{ marginBottom: '1rem' }}>
+            <TextField type="text" label="Id" variant="outlined" name="userId" ref={userIdRef} onInput={userFormCheck.checkId} onChange={onChange} value={userId} required autoFocus />
+            <TextField type="email" label="Email" variant="outlined" name="userEmail" ref={userEmailRef} onInput={userFormCheck.checkEmail} onChange={onChange} value={userEmail} required />            
+            <TextField type="password" label="Password" variant="outlined" ref={userPwRef} onInput={userFormCheck.checkPassword} onChange={onChange} value={userPw} name="userPw" required />
+
+          </Stack>
+
+
+
+          <Stack spacing={1}>
+            <Button variant="contained" onClick={handleClickSignup}>가입 </Button>
+            <Button variant="text" href="/auth/login">이미 계정이 있어요 </Button>
+
+          </Stack>
+
+
+
+        </Box>
+      </Grid>
   
-        <div className="container h-100 ">
-          <div className="row h-100 ">
-            <div className="col-lg-6 col-xl-6 mx-auto h-100">
-              <div className="h-100 flex-row d-flex justify-content-center align-items-center overflow-hidden">
-                <div className="card-body p-4 p-sm-5">
-                  <h5 className="card-title text-center mb-5 fw-light fs-5">프레임 가입</h5>
-      
-                    <div className="form-floating mb-3">
-                      <input type="text" className="form-control" placeholder="myusername" name="userId" ref={userIdRef} onInput={userFormCheck.checkId} onChange={onChange} value={userId} required autoFocus />
-                      <label htmlFor="Username">아이디</label>
-
-                      <div className="valid-feedback">
-                        완벽해요.
-                      </div>
-                      <div className="invalid-feedback">
-                        특수문자는 입력할 수 없어요.
-                      </div>
-                    </div>
-      
-                    <div className="form-floating mb-3">
-                      <input type="email" className="form-control" name="userEmail" ref={userEmailRef} onInput={userFormCheck.checkEmail} onChange={onChange} value={userEmail} required />
-                      <label htmlFor="Email">이메일</label>
-
-                      <div className="valid-feedback">
-                        멋진 이메일이네요.
-                      </div>
-                      <div className="invalid-feedback">
-                        이메일 형식이 맞지 않아요.
-                      </div>
-                    </div>
-      
-                    <div className="form-floating mb-4">
-                      <input type="password" className="form-control" ref={userPwRef} onInput={userFormCheck.checkPassword} onChange={onChange} value={userPw} name="userPw" />
-                      <label htmlFor="Password">비밀번호</label>
-
-                      <div className="valid-feedback">
-                        안전해요.
-                      </div>
-                      <div className="invalid-feedback">
-                        비밀번호는 최소 8글자 이상이어야 해요.
-                      </div>
-                    </div>
-      
-
-      
-                    <div className="d-grid mb-2">
-                      <button className="btn btn-lg btn-primary btn-login fw-bold text-uppercase" onClick={handleClickSignup}>회원가입</button>
-                    </div>
-      
-                    <a className="d-block text-left mt-2 small" href="/auth/login">로그인 {">"}</a>
-      
-      
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
     );
   }
   
