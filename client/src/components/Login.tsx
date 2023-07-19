@@ -6,7 +6,9 @@ import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import Cookies from 'js-cookie'
 
 function Login() {
-  const [openAlert, setOpenAlert] = React.useState(true);
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [alertSeverity, setAlertSeverity]: any = React.useState('success');
+  const [alertMessage, setAlertMessage] = React.useState('');
 
   const [inputs, setInputs] = useState({
     userId: '',
@@ -14,7 +16,6 @@ function Login() {
   });
 
   const { userId, userPw } = inputs;
-
 
 
   async function login() {
@@ -32,28 +33,34 @@ function Login() {
     let data = await response.json();
 
     if (data.status == 1) {
-        Cookies.set('user', data.token)
-        dds.toast({
-            content: '로그인에 성공했어요'
-        })
+      Cookies.set('user', data.token)
 
-        setTimeout(() => {
-            location.href = '/'
-        }, 1400);
+      showAlert("success", "로그인에 성공했어요")
+
+      setTimeout(() => {
+          location.href = '/'
+      }, 1400);
     } else if (data.status == -1) {
-        dds.toast({
-            content: '탈퇴한 회원이거나 권한이 없어요'
-        })
+      showAlert("info", "탈퇴한 회원이거나 권한이 없어요")
+
     } else {
-        dds.toast({
-            content: '로그인 정보가 맞지 않아요'
-        })
+      showAlert("info", "로그인 정보가 맞지 않아요")
     } 
 }
 
 
   const handleClickLogin = () => {
     login()
+  }
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  }
+
+  const showAlert = (severity, message) => {
+    setOpenAlert(true)
+    setAlertSeverity(severity)
+    setAlertMessage(message)
   }
 
   const onChange = (e) => {
@@ -89,14 +96,17 @@ function Login() {
 
           </Stack>
 
+          
+
 
           <Snackbar
             open={openAlert}
+            onClose={handleCloseAlert}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            
-          >
-            <Alert severity="success" sx={{ width: '100%' }}>
-              This is a success message!
+            autoHideDuration={3000}>
+
+            <Alert severity={alertSeverity} sx={{ width: '100%' }}>
+              {alertMessage}
             </Alert>
           </Snackbar>
 
@@ -105,6 +115,8 @@ function Login() {
 
   
     );
-  }
+}
+
+
   
   export default Login;

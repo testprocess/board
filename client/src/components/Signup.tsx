@@ -1,21 +1,24 @@
 import React, { useState, useRef } from "react";
 import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
-import { Button, Box, Grid, TextField, Stack } from '@mui/material';
-
+import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 
 function Signup() {
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [alertSeverity, setAlertSeverity]: any = React.useState('success');
+  const [alertMessage, setAlertMessage] = React.useState('');
 
-    const [inputs, setInputs] = useState({
-        userId: '',
-        userEmail: '',
-        userPw: ''
-    });
-    
-    const { userId, userEmail, userPw } = inputs;
-    const userIdRef = useRef();
-    const userEmailRef = useRef();
-    const userPwRef = useRef();
+  const [inputs, setInputs] = useState({
+      userId: '',
+      userEmail: '',
+      userPw: ''
+  });
+  
+  const { userId, userEmail, userPw } = inputs;
+  const userIdRef = useRef();
+  const userEmailRef = useRef();
+  const userPwRef = useRef();
 
 
     async function signup() {
@@ -41,35 +44,27 @@ function Signup() {
             let data = await response.json();
     
             if (data.status == 1) {
-                Cookies.set('user', data.token)
+              Cookies.set('user', data.token)
 
-                dds.toast({
-                    content: '가입에 성공했어요'
-                })
+              showAlert("success", "가입에 성공했어요")
 
-                setTimeout(() => {
-                    location.href = '/'
-                }, 1200);
+              setTimeout(() => {
+                location.href = '/'
+              }, 1200);
             } else if (data.status == 2) { // 비번 8자리
-                dds.toast({
-                    content: '바밀번호는 8자리 이상이여야 해요'
-                })
+              showAlert("info", "바밀번호는 8자리 이상이여야 해요")
+
             } else if (data.status == 5) { // 특수문자
-                dds.toast({
-                    content: '아이디에 특수문자는 입력할 수 없어요'
-                })
+              showAlert("info", "아이디에 특수문자는 입력할 수 없어요")
 
             } else if (data.status == 0) {
-                dds.toast({
-                    content: '사용 불가한 아이디 또는 이메일이에요'
-                })
+              showAlert("info", "사용 불가한 아이디 또는 이메일이에요")
+
             }
         } catch (error) {
-            console.log(error)
-            dds.toast({
-                content: '에러가 발생했어요'
-            })
+          console.log(error)
 
+          showAlert("info", "에러가 발생했어요")
         }
     }
 
@@ -133,6 +128,17 @@ function Signup() {
     });
   };
 
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  }
+
+  const showAlert = (severity, message) => {
+    setOpenAlert(true)
+    setAlertSeverity(severity)
+    setAlertMessage(message)
+  }
+
     return (
 
       <Grid
@@ -162,6 +168,17 @@ function Signup() {
 
           </Stack>
 
+
+          <Snackbar
+            open={openAlert}
+            onClose={handleCloseAlert}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            autoHideDuration={3000}>
+
+            <Alert severity={alertSeverity} sx={{ width: '100%' }}>
+              {alertMessage}
+            </Alert>
+          </Snackbar>
 
 
         </Box>
