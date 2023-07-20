@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
-import { TextField, Button, Stack, Grid, Card, CardContent, Typography } from '@mui/material';
+import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { Popup } from './Alert'
 
@@ -70,6 +70,10 @@ async function insertFeed(content) {
 function Feed() {
     const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: ''}])
     const [isLogin, setLoginStatus] = useState(false);
+    const [fetching, setFetching] = useState(0);
+    const [fetchingLock, setFetchingLock] = useState(false);
+
+
 
     const checkLogin = () => {
         let token = Cookies.get("user")
@@ -86,6 +90,23 @@ function Feed() {
         }
     }
 
+    const handleScroll = (e) => {
+        if (fetchingLock) {
+            return 0
+        }
+
+        if (document.documentElement.scrollTop + document.documentElement.clientHeight + 100 > document.documentElement.scrollHeight) {
+            setFetchingLock(true)
+            setFetching( fetching + 10 )
+
+            setTimeout(() => {
+                setFetchingLock(false)
+
+            }, 1000);
+        }
+    }
+    
+
     useEffect(() => {
         let loginStatus = checkLogin()
         setLoginStatus(loginStatus.isVaild)
@@ -93,17 +114,21 @@ function Feed() {
 
     useEffect(() => {
         const loadData = async () => {
-            let feeds = await getFeed(1, {
+            let getFeeds = await getFeed(fetching, {
                 isrange: 'true',
-                range: 20,
+                range: 10,
                 order: "DESC"
             })
-            setFeeds(feeds.data.result)
-            console.log(feeds)
+
+            setFeeds([...feeds, ...getFeeds.data.result])
         };
 
         loadData()
-    }, [])
+    }, [fetching])
+
+
+    document.addEventListener('scroll', handleScroll)
+
 
     if (isLogin) {
         return (
@@ -111,7 +136,7 @@ function Feed() {
             <Grid item xs md>
             </Grid>
             <Grid item xs={10} md={6}>
-                <FeedInput></FeedInput>
+                <FeedInput feed={{feeds, setFeeds}}></FeedInput>
                 {feeds.map(feed => (
                     <div>
                         <FeedBody><b>{feed.owner}</b>  {feed.content}</FeedBody>
@@ -144,7 +169,7 @@ function Feed() {
 
 }
 
-function FeedInput() {
+function FeedInput(props) {
     const [input, setInput] = useState('')
     const [alertTrigger, setAlertTrigger] = useState(0)
 
@@ -154,10 +179,11 @@ function FeedInput() {
 
     const handleClick = () => {
         if (input.length > 1000) {
-            console.log("SS", alertTrigger)
             setAlertTrigger(alertTrigger + 1)
             return 0
         }
+    
+        props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: '', date: new Date()}, ...props.feed.feeds])
 
         insertFeed(input)
         setInput('')
@@ -184,12 +210,12 @@ function FeedInput() {
 
 function FeedBody({ children }) {
     return (
-        <Card sx={{ minWidth: 275, marginBottom: '1rem' }}>
+        <Card sx={{ marginBottom: '1rem' }}>
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                <Box sx={{ fontSize: 14, whiteSpace: 'pre-line', wordWrap: 'break-word' }} color="text.secondary">
                     {children}
 
-                </Typography>
+                </Box>
             </CardContent>
         </Card>
     )

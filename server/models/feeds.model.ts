@@ -4,23 +4,20 @@ import { Feed } from "../databases/entity/Feed.js";
 
 type SelectRangeType = {
     idxStart: number
-    idxEnd: number
     order?: any
+    range: number
 }
 
 const feedModel = {
-    get: async function ({ idxStart, idxEnd, order }: SelectRangeType) {
+    get: async function ({ idxStart, order, range }: SelectRangeType) {
         try {
             const feedRepository = AppDataSource.getRepository(Feed);
             const getFeed = await feedRepository.find({
-                where: {
-                    idx: Between(
-                        idxStart, 
-                        idxEnd
-                    ),
-                },
+                take: range,
+                skip: idxStart, 
+
                 order: {
-                    idx: order,
+                    date: order,
                 },
             })
     

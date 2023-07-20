@@ -11,24 +11,32 @@ import dayjs from 'dayjs';
 
 const feedController = {
     get: async function  (req, res) {
-        let idx = Number(req.params.idx) || -1;
+        let idx = Number(req.params.idx) || 0;
         let isRange = String(req.query.isrange) || 'false'
         let order = String(req.query.order) || 'ASC'
         let allowOrder = ['ASC', 'DESC']
 
         let idxRange = Number(req.query.range) || 0;
-        let idxStart = idx || -1;
+        let idxMaxRange = 50
+
+        let idxStart = idx || 0;
         let idxEnd = idxStart + idxRange || idx;
         let resultFeed;
 
         if (allowOrder.indexOf(order) == -1) {
             return res.status(404).json({data:'', msg:'Not Found'})
         }
+
+        if (idxRange > idxMaxRange) {
+            idxRange = idxMaxRange
+        }
+
+        console.log({ idxStart, order, range: idxRange })
     
         if (isRange == 'true') {
-            resultFeed = await feedModel.get({ idxStart, idxEnd, order })
+            resultFeed = await feedModel.get({ idxStart, order, range: idxRange })
         } else {
-            resultFeed = await feedModel.get({ idxStart: idx, idxEnd: idx })
+            resultFeed = await feedModel.get({ idxStart: idx, range: 1 })
         }
     
         if (Array.isArray(resultFeed) && resultFeed.length === 0) {
