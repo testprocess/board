@@ -3,6 +3,7 @@ import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { Popup } from './Alert'
 
 async function getFeed(feed_idx, fetch_params) {
     let token = Cookies.get("user")
@@ -94,7 +95,8 @@ function Feed() {
         const loadData = async () => {
             let feeds = await getFeed(1, {
                 isrange: 'true',
-                range: 20
+                range: 20,
+                order: "DESC"
             })
             setFeeds(feeds.data.result)
             console.log(feeds)
@@ -144,12 +146,19 @@ function Feed() {
 
 function FeedInput() {
     const [input, setInput] = useState('')
+    const [alertTrigger, setAlertTrigger] = useState(0)
 
     const handleChange = (e) => {
         setInput(e.target.value)
     }
 
     const handleClick = () => {
+        if (input.length > 1000) {
+            console.log("SS", alertTrigger)
+            setAlertTrigger(alertTrigger + 1)
+            return 0
+        }
+
         insertFeed(input)
         setInput('')
 
@@ -165,7 +174,9 @@ function FeedInput() {
                 value={input}
                 multiline
             />
+            <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "#000000" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick}><SendIcon /> </Button>
+            <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
 
         </Stack>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Box } from '@mui/material';
+import { Button, Box, Grid } from '@mui/material';
 import Cookies from 'js-cookie'
 
 function Main() {
@@ -27,17 +27,27 @@ function Main() {
 
 
     return (
-        <Box sx={{ display: 'grid' }}>
-            <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                <h1 >더 모던하고 깔끔한 게시판의 세계로</h1>
-                <p >Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit!</p>
-            </Box>
+        <Grid container sx={{ marginTop: "1rem" }} spacing={3}>
+        <Grid item xs md>
+        </Grid>
+        <Grid item xs={10} md={6}>
+        
+            <Box sx={{ display: 'grid', marginBottom: "2rem" }}>
+                <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                    <h1>단순 게시판이 아닌데요</h1>
+                    <p>환영합니다. 이 게시판은 실험용 게시판 입니다. 글이 언제든지 삭제될 수 있고 서버가 날라갈 우려도 있습니다. </p>
+                </Box>
 
-            <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                <ButtonBox isLogin={isLogin}></ButtonBox>
-            </Box>
+                <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                    <ButtonBox isLogin={isLogin}></ButtonBox>
+                </Box>
 
-        </Box>
+            </Box>
+        </Grid>
+        <Grid item xs md>
+        </Grid>
+        </Grid>
+
     );
 }
 

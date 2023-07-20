@@ -1,14 +1,15 @@
-import { Between } from "typeorm";
+import { Between, FindOptionsOrder } from "typeorm";
 import { MySQLConnect, AppDataSource } from '../databases/db.js'
 import { Feed } from "../databases/entity/Feed.js";
 
 type SelectRangeType = {
     idxStart: number
     idxEnd: number
+    order?: any
 }
 
 const feedModel = {
-    getFeedsRange: async function ({ idxStart, idxEnd }: SelectRangeType) {
+    get: async function ({ idxStart, idxEnd, order }: SelectRangeType) {
         try {
             const feedRepository = AppDataSource.getRepository(Feed);
             const getFeed = await feedRepository.find({
@@ -17,7 +18,10 @@ const feedModel = {
                         idxStart, 
                         idxEnd
                     ),
-                }
+                },
+                order: {
+                    idx: order,
+                },
             })
     
             return { status: 1, result: getFeed }
@@ -39,7 +43,7 @@ const feedModel = {
         }
     },
 
-    insertFeedData: async function ({ content, owner, date, type }) {
+    insert: async function ({ content, owner, date, type }) {
         try {
             const feedRepository = AppDataSource.getRepository(Feed);
             const insertFeed = await feedRepository.createQueryBuilder()
@@ -74,7 +78,7 @@ const feedModel = {
         }
     },
     
-    deleteFeedData: async function ({ idxFeed, owner }): Promise<{ }> {
+    delete: async function ({ idxFeed, owner }): Promise<{ }> {
         try {
             const feedRepository = AppDataSource.getRepository(Feed);
             const deleteFeed = await feedRepository.createQueryBuilder('feed')
@@ -110,7 +114,7 @@ const feedModel = {
         }
     },
     
-    updateFeedData: async function ({ idxFeed, contentFeed, owner }) {
+    update: async function ({ idxFeed, contentFeed, owner }) {
         try {
             const feedRepository = AppDataSource.getRepository(Feed);
             const updateFeed = await feedRepository.createQueryBuilder()

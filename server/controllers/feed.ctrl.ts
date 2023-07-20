@@ -7,20 +7,28 @@ import sanitizeHtml from 'sanitize-html';
 import dayjs from 'dayjs';
 
 
+
+
 const feedController = {
     get: async function  (req, res) {
         let idx = Number(req.params.idx) || -1;
         let isRange = String(req.query.isrange) || 'false'
-    
+        let order = String(req.query.order) || 'ASC'
+        let allowOrder = ['ASC', 'DESC']
+
         let idxRange = Number(req.query.range) || 0;
         let idxStart = idx || -1;
         let idxEnd = idxStart + idxRange || idx;
         let resultFeed;
+
+        if (allowOrder.indexOf(order) == -1) {
+            return res.status(404).json({data:'', msg:'Not Found'})
+        }
     
         if (isRange == 'true') {
-            resultFeed = await feedModel.getFeedsRange({ idxStart, idxEnd })
+            resultFeed = await feedModel.get({ idxStart, idxEnd, order })
         } else {
-            resultFeed = await feedModel.getFeedsRange({ idxStart: idx, idxEnd: idx })
+            resultFeed = await feedModel.get({ idxStart: idx, idxEnd: idx })
         }
     
         if (Array.isArray(resultFeed) && resultFeed.length === 0) {
@@ -36,13 +44,17 @@ const feedController = {
         let now = dayjs();
     
         let getUserId = await userService.transformTokentoUserid({ token: token });
-    
+
         let content = sanitizeHtml(req.body.content);
         let owner = getUserId.userId
         let date = now.format("YYYY.MM.DD.HH.mm.ss"); 
         let type = 1;
     
-        let data: any = await feedModel.insertFeedData({ content: content, owner: owner, date: date, type: type })
+        if (req.body.content.length > 1000) {
+            return res.status(401).json({status:0})
+        }
+
+        let data: any = await feedModel.insert({ content: content, owner: owner, date: date, type: type })
     
         if (data.status == 1) {
             res.status(200).json({status:1})
@@ -60,7 +72,7 @@ const feedController = {
     
         let owner =  getUserId.userId
     
-        let data: any = await feedModel.deleteFeedData({ idxFeed, owner })
+        let data: any = await feedModel.delete({ idxFeed, owner })
     
         if (data.status == 1) {
             res.status(200).json({status:1})
@@ -77,10 +89,8 @@ const feedController = {
         let contentFeed = req.body.content;
         let getUserId = await userService.transformTokentoUserid({ token: token });
         let owner = getUserId.userId
-    
-        let updateFeed = { idxFeed, contentFeed, owner };
-    
-        let data: any = await feedModel.updateFeedData(updateFeed)
+        
+        let data: any = await feedModel.update({ idxFeed, contentFeed, owner })
     
         if (data.status == 1) {
             res.status(200).json({status:1})
