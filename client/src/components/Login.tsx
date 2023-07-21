@@ -64,10 +64,10 @@ function Login() {
   }
 
   const onChange = (e) => {
-    const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
+    const { value, name } = e.target;
     setInputs({
-      ...inputs, // 기존의 input 객체를 복사한 뒤
-      [name]: value // name 키를 가진 값을 value 로 설정
+      ...inputs,
+      [name]: value
     });
   };
 
@@ -82,7 +82,7 @@ function Login() {
 
         <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
 
-          <h5 className="card-title text-center mb-5 fw-light fs-5">프레임 로그인</h5>
+          <h5 className="card-title text-center mb-5 fw-light fs-5">로그인</h5>
 
           <Stack spacing={2} sx={{ marginBottom: '1rem' }}>
             <TextField type="text" label="Id" variant="outlined" placeholder="User ID" name="userId" onChange={onChange} value={userId} required autoFocus />

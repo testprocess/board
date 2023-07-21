@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
-import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { Popup } from './Alert'
 
@@ -72,6 +72,7 @@ function Feed() {
     const [isLogin, setLoginStatus] = useState(false);
     const [fetching, setFetching] = useState(0);
     const [fetchingLock, setFetchingLock] = useState(false);
+    const [fetchingStop, setFetchingStop] = useState(false);
 
 
 
@@ -113,17 +114,22 @@ function Feed() {
     }, []);
 
     useEffect(() => {
-        const loadData = async () => {
-            let getFeeds = await getFeed(fetching, {
-                isrange: 'true',
-                range: 10,
-                order: "DESC"
-            })
-
-            setFeeds([...feeds, ...getFeeds.data.result])
-        };
-
-        loadData()
+        if (!fetchingStop) {
+            const loadData = async () => {
+                let getFeeds = await getFeed(fetching, {
+                    isrange: 'true',
+                    range: 10,
+                    order: "DESC"
+                })
+    
+                if (getFeeds.data.result.length == 0) {
+                    setFetchingStop(true)
+                }
+                setFeeds([...feeds, ...getFeeds.data.result])
+            };
+    
+            loadData()  
+        }
     }, [fetching])
 
 
@@ -133,16 +139,20 @@ function Feed() {
     if (isLogin) {
         return (
             <Grid container spacing={3}>
-            <Grid item xs md>
-            </Grid>
-            <Grid item xs={10} md={6}>
-                <FeedInput feed={{feeds, setFeeds}}></FeedInput>
-                {feeds.map(feed => (
-                    <FeedBody feed={feed}></FeedBody>
-                ))}
-            </Grid>
-            <Grid item xs md>
-            </Grid>
+                <Grid item xs md>
+                </Grid>
+                <Grid item xs={10} md={6}>
+                    <FeedInput feed={{feeds, setFeeds}}></FeedInput>
+                    {feeds.map(feed => (
+                        <FeedBody feed={feed}></FeedBody>
+                    ))}
+
+                    <FeedSkeleton></FeedSkeleton>
+                    <FeedSkeleton></FeedSkeleton>
+
+                </Grid>
+                <Grid item xs md>
+                </Grid>
             </Grid>
         );
     }
@@ -156,6 +166,8 @@ function Feed() {
                 <FeedBody feed={feed}></FeedBody>
 
             ))}
+            <FeedSkeleton></FeedSkeleton>
+
         </Grid>
         <Grid item xs md>
         </Grid>
@@ -223,6 +235,21 @@ function FeedBody({ feed }) {
                 </Box>
             </CardContent>
         </Card>
+    )
+}
+
+
+function FeedSkeleton() {
+    return (
+        <Card sx={{ marginBottom: '1rem' }}>
+            <CardContent>
+                <Box sx={{ fontSize: 14, whiteSpace: 'pre-line', wordWrap: 'break-word' }} color="text.secondary">
+                    <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
+
+                </Box>
+            </CardContent>
+        </Card>
+
     )
 }
   
