@@ -68,7 +68,7 @@ async function insertFeed(content) {
 // }
 
 function Feed() {
-    const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: ''}])
+    const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: '', type: 0}])
     const [isLogin, setLoginStatus] = useState(false);
     const [fetching, setFetching] = useState(0);
     const [fetchingLock, setFetchingLock] = useState(false);
@@ -138,10 +138,7 @@ function Feed() {
             <Grid item xs={10} md={6}>
                 <FeedInput feed={{feeds, setFeeds}}></FeedInput>
                 {feeds.map(feed => (
-                    <div>
-                        <FeedBody><b>{feed.owner}</b>  {feed.content}</FeedBody>
-                        
-                    </div>
+                    <FeedBody feed={feed}></FeedBody>
                 ))}
             </Grid>
             <Grid item xs md>
@@ -156,10 +153,8 @@ function Feed() {
         </Grid>
         <Grid item xs={10} md={6}>
             {feeds.map(feed => (
-                <div>
-                    <FeedBody> <b>{feed.owner}</b> {feed.content}</FeedBody>
-                    
-                </div>
+                <FeedBody feed={feed}></FeedBody>
+
             ))}
         </Grid>
         <Grid item xs md>
@@ -181,6 +176,11 @@ function FeedInput(props) {
         if (input.length > 1000) {
             setAlertTrigger(alertTrigger + 1)
             return 0
+        }
+
+        if (input.length == 0) {
+            return 0
+
         }
     
         props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: '', date: new Date()}, ...props.feed.feeds])
@@ -208,12 +208,17 @@ function FeedInput(props) {
     );
 }
 
-function FeedBody({ children }) {
+function FeedBody({ feed }) {
+    if (feed.type == 0) {
+        return (
+            <></>
+        )
+    }
     return (
         <Card sx={{ marginBottom: '1rem' }}>
             <CardContent>
                 <Box sx={{ fontSize: 14, whiteSpace: 'pre-line', wordWrap: 'break-word' }} color="text.secondary">
-                    {children}
+                    <b>{feed.owner}</b>  {feed.content}
 
                 </Box>
             </CardContent>
