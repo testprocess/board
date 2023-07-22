@@ -12,7 +12,9 @@
     "bundle": "webpack -w --mode=development",
     "bundle:prod": "webpack --mode=production",
 
-    "build-ts": "tsc -w"
+    "build": "tsc -w",
+    "build:prod": "tsc"
+
   },
   "repository": {
     "type": "git",
