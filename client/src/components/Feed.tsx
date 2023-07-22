@@ -1,60 +1,66 @@
 import React, { useEffect, useState } from "react";
-import dds from 'deventds/dist/handle'
-import Cookies from 'js-cookie'
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Popup } from './Alert'
 
+import dds from 'deventds/dist/handle'
+import SendIcon from '@mui/icons-material/Send';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import axios from "axios"
+import dayjs from 'dayjs';
+import Cookies from 'js-cookie'
 
-async function getFeed(feed_idx, fetch_params) {
-    let token = Cookies.get("user")
 
-    let params = fetch_params || {}
-    let params_string = new URLSearchParams(params).toString();
-
-    let response = await fetch(`/api/feeds/${feed_idx}?${params_string}`, {
-        method: "GET",
+async function getFeed(feedIdx, fetchParams) {
+    let response = await axios.request({
+        method: 'get',
+        url: `/api/feeds/${feedIdx}`,
+        params: fetchParams,
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "x-access-token": token
-        }
-    });
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        responseType: 'json'
+    })
 
-    let data = response.json();
-    return data;
+
+    return response.data
 }
 
 async function insertFeed(content) {
     let token = Cookies.get("user")
 
-    let response = await fetch("/api/feeds", {
-        method: "POST",
+    let response = await axios.request({
+        method: 'post',
+        url: `/api/feeds`,
+        data: {
+            content: content
+        },
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "x-access-token": token
-        },
-        body: `content=${content}`
-    });
 
-    let data = response.json();
-    return data;
+        },
+        responseType: 'json'
+    })
+
+    return response.data
 }
 
 
 async function deleteFeed(idx) {
     let token = Cookies.get("user")
-
-    let response = await fetch("/api/feeds/"+idx, {
-        method: "DELETE",
+    
+    let response = await axios.request({
+        method: 'delete',
+        url: `/api/feeds/${idx}`,
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "x-access-token": token
-        }
-    });
 
-    let data = response.json();
-    return data;
+        },
+        responseType: 'json'
+    })
+
+    return response.data
 }
 
 // async update(idx, content) {
@@ -193,7 +199,7 @@ function FeedInput(props) {
             return 0
         }
     
-        props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: '', date: new Date()}, ...props.feed.feeds])
+        props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: '', date: dayjs().format("YYYY.MM.DD.HH.mm.ss")}, ...props.feed.feeds])
         insertFeed(input)
         setInput('')
     }
@@ -237,6 +243,8 @@ function FeedBody({ feed }) {
 
 
 function FeedProfile({ feed }) {
+    const dateSplit = feed.date.split('.')
+
     return (
         <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem", alignContent: 'center' }}>
             <Grid container wrap="nowrap" spacing={2} sx={{ alignContent: 'center', alignItems: 'center' }}>
@@ -245,7 +253,7 @@ function FeedProfile({ feed }) {
                 </Grid>
                 <Grid item xs zeroMinWidth sx={{ alignContent: 'center'}}>
                     <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
-                    <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{feed.date}</Typography>
+                    <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{new Date(dateSplit[0], dateSplit[1], dateSplit[2], dateSplit[3], dateSplit[4], dateSplit[5]).toDateString()}</Typography>
 
                 </Grid>
                 <Grid item xs zeroMinWidth sx={{ justifyContent: 'flex-end',  }}>

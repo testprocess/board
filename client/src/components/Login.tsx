@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import Cookies from 'js-cookie'
+import axios from "axios"
+
 
 function Login() {
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -20,15 +22,21 @@ function Login() {
     let user_id = btoa(userId);
     let user_pw = btoa(userPw);
         
-    let response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `user_id="${user_id}"&user_pw="${user_pw}"`
-    });
 
-    let data = await response.json();
+    let response = await axios.request({
+      method: 'post',
+      url: `/api/auth/login`,
+      data: {
+        user_id: user_id,
+        user_pw: user_pw
+      },
+      headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+      },
+      responseType: 'json'
+  })
+
+    let data = response.data
 
     if (data.status == 1) {
       Cookies.set('user', data.token)
