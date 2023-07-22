@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
-import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton } from '@mui/material';
+import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Popup } from './Alert'
+
 
 async function getFeed(feed_idx, fetch_params) {
     let token = Cookies.get("user")
@@ -229,8 +231,10 @@ function FeedBody({ feed }) {
     return (
         <Card sx={{ marginBottom: '1rem' }}>
             <CardContent>
+                <FeedProfile feed={feed}></FeedProfile>
+
                 <Box sx={{ fontSize: 14, whiteSpace: 'pre-line', wordWrap: 'break-word' }} color="text.secondary">
-                    <b>{feed.owner}</b>  {feed.content}
+                    {feed.content}
 
                 </Box>
             </CardContent>
@@ -238,6 +242,27 @@ function FeedBody({ feed }) {
     )
 }
 
+function FeedProfile({ feed }) {
+    return (
+        <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem" }}>
+          <Grid container wrap="nowrap" spacing={2}>
+            <Grid item>
+              <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.slice(0, 1)}</Avatar>
+            </Grid>
+            <Grid item xs zeroMinWidth sx={{ alignContent: 'center'}}>
+              <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
+            </Grid>
+            <Grid item xs zeroMinWidth sx={{ justifyContent: 'flex-end',  }}>
+              <Typography sx={{ textAlign: 'right'}} noWrap>
+              <IconButton aria-label="delete" size="small">
+              <MoreVertIcon sx={{ fontSize: '1.2rem' }}></MoreVertIcon>
+                </IconButton>
+</Typography>
+            </Grid>
+          </Grid>   
+        </Box>
+    )
+}
 
 function FeedSkeleton() {
     return (
