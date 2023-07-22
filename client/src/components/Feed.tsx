@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
 import { Popup } from './Alert'
+import { useDispatch, useSelector } from 'react-redux';
+
 
 import dds from 'deventds/dist/handle'
 import SendIcon from '@mui/icons-material/Send';
@@ -78,26 +80,12 @@ async function deleteFeed(idx) {
 // }
 
 function Feed() {
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
+
     const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: '', type: 0}])
-    const [isLogin, setLoginStatus] = useState(false);
     const [fetching, setFetching] = useState(0);
     const [fetchingLock, setFetchingLock] = useState(false);
     const [fetchingStop, setFetchingStop] = useState(false);
-
-    const checkLogin = () => {
-        let token = Cookies.get("user")
-        try {
-            let decoded = JSON.parse(atob(token.split('.')[1]));
-            return {
-                isVaild: true,
-                decoded: decoded
-            }
-        } catch (error) {
-            return {
-                isVaild: false
-            }
-        }
-    }
 
     const handleScroll = (e) => {
         if (fetchingLock) {
@@ -115,10 +103,6 @@ function Feed() {
         }
     }
     
-    useEffect(() => {
-        let loginStatus = checkLogin()
-        setLoginStatus(loginStatus.isVaild)
-    }, []);
 
     useEffect(() => {
         if (!fetchingStop) {
@@ -270,6 +254,8 @@ function FeedProfile({ feed }) {
 function FeedMenu({ feed }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [alertTrigger, setAlertTrigger] = useState(0)
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
+    const userId = useSelector((state: any) => state.auth.userId);
 
     const open = Boolean(anchorEl);
 
@@ -314,7 +300,14 @@ function FeedMenu({ feed }) {
             'aria-labelledby': 'basic-button',
             }}>
 
-            <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
+            <MenuItem sx={{ color: "#000000" }} onClick={handleClose}>info</MenuItem>
+
+            {(isLogin && feed.owner == userId) ? (
+                <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
+               
+            ) : (
+                <></>
+            )}
         </Menu>
 
         <Popup trigger={alertTrigger} message="삭제 완료" severity="success"></Popup>
