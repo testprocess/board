@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
 import { Popup } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
+import { push, unshift, remove } from '../features/feedSlice';
 
 
 import dds from 'deventds/dist/handle'
@@ -80,9 +81,12 @@ async function deleteFeed(idx) {
 // }
 
 function Feed() {
-    const isLogin = useSelector((state: any) => state.auth.isLogin);
+    const dispatch = useDispatch();
 
-    const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: '', type: 0}])
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
+    const feeds = useSelector((state: any) => state.feed.feeds);
+
+    //const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: '', type: 0}])
     const [fetching, setFetching] = useState(0);
     const [fetchingLock, setFetchingLock] = useState(false);
     const [fetchingStop, setFetchingStop] = useState(false);
@@ -116,7 +120,21 @@ function Feed() {
                 if (getFeeds.data.result.length == 0) {
                     setFetchingStop(true)
                 }
-                setFeeds([...feeds, ...getFeeds.data.result])
+
+                for (let index = 0; index < getFeeds.data.result.length; index++) {
+                    const element = getFeeds.data.result[index];
+    
+                    dispatch(push({
+                        idx: element.idx, 
+                        content: element.content, 
+                        owner: element.owner, 
+                        date: element.date, 
+                        type: element.type, 
+                    }))
+                }
+
+
+                //setFeeds([...feeds, ...getFeeds.data.result])
             };
     
             loadData()  
@@ -131,7 +149,7 @@ function Feed() {
                 <Grid item xs md>
                 </Grid>
                 <Grid item xs={10} md={6}>
-                    <FeedInput feed={{feeds, setFeeds}}></FeedInput>
+                    <FeedInput></FeedInput>
                     {feeds.map(feed => (
                         <FeedBody feed={feed}></FeedBody>
                     ))}
@@ -166,6 +184,11 @@ function Feed() {
 
 
 function FeedInput(props) {
+    const dispatch = useDispatch();
+
+    const userId = useSelector((state: any) => state.auth.userId);
+    const feeds = useSelector((state: any) => state.feed.feeds);
+
     const [input, setInput] = useState('')
     const [alertTrigger, setAlertTrigger] = useState(0)
 
@@ -183,7 +206,15 @@ function FeedInput(props) {
             return 0
         }
     
-        props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: '', date: dayjs().format("YYYY.MM.DD.HH.mm.ss")}, ...props.feed.feeds])
+        dispatch(unshift({
+            idx: feeds[0].idx + 1, 
+            content: input, 
+            owner: userId, 
+            date: dayjs().format("YYYY.MM.DD.HH.mm.ss"), 
+            type: 1, 
+        }))
+
+        //props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: userId, date: dayjs().format("YYYY.MM.DD.HH.mm.ss")}, ...props.feed.feeds])
         insertFeed(input)
         setInput('')
     }
@@ -252,6 +283,8 @@ function FeedProfile({ feed }) {
 
 
 function FeedMenu({ feed }) {
+    const dispatch = useDispatch();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [alertTrigger, setAlertTrigger] = useState(0)
     const isLogin = useSelector((state: any) => state.auth.isLogin);
@@ -270,7 +303,9 @@ function FeedMenu({ feed }) {
     const handleDelete = async () => {
         const deleteThisFeed = await deleteFeed(feed.idx)
 
-        console.log(deleteThisFeed)
+        dispatch(remove({
+            idx: feed.idx
+        }))
 
         if (deleteThisFeed.status == 1) {
             setAlertTrigger(alertTrigger + 1)
