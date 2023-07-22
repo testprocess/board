@@ -10,8 +10,8 @@
     "start:dev": "NODE_ENV=development node app.js",
     "bundle": "webpack -w --mode=development",
     "bundle:prod": "webpack --mode=production",
-    "build": "tsc -w",
-    "build:prod": "tsc"
+    "compile": "tsc -w",
+    "compile:prod": "tsc"
   },
   "repository": {
     "type": "git",
