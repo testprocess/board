@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 export default 
 {
     "entry":["./client/src/index.tsx"],
-    "watch": true,
+    "watch": false,
     "module": {
         "rules": [
             {

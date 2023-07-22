@@ -9,6 +9,7 @@ import { Feed } from './entity/Feed.js'
 
 const MySQLConnect = createConnection({
   host     : data[ process.env.NODE_ENV ].host,
+  port     : data[ process.env.NODE_ENV ].port,
   user     : data[ process.env.NODE_ENV ].username,
   password : data[ process.env.NODE_ENV ].password,
   database : data[ process.env.NODE_ENV ].database,
