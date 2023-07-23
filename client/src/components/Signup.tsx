@@ -3,6 +3,8 @@ import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
 import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import axios from "axios"
+
 
 function Signup() {
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -22,50 +24,57 @@ function Signup() {
 
 
     async function signup() {
-        try {
-            let user_id = btoa(userId);
-            let user_pw = btoa(userPw);
-            let user_email = btoa(userEmail);
-        
-            if (user_id == '' || user_pw == '' || user_email == '') {
-                return dds.toast({
-                    content: '입력칸을 확인해주세요'
-                })
-            }
-        
-            let response = await fetch("/api/users", {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: `user_id=${user_id}&user_pw=${user_pw}&user_email=${user_email}`
-            });
-        
-            let data = await response.json();
-    
-            if (data.status == 1) {
-              Cookies.set('user', data.token)
-
-              showAlert("success", "가입에 성공했어요")
-
-              setTimeout(() => {
-                location.href = '/'
-              }, 1200);
-            } else if (data.status == 2) { // 비번 8자리
-              showAlert("info", "바밀번호는 8자리 이상이여야 해요")
-
-            } else if (data.status == 5) { // 특수문자
-              showAlert("info", "아이디에 특수문자는 입력할 수 없어요")
-
-            } else if (data.status == 0) {
-              showAlert("info", "사용 불가한 아이디 또는 이메일이에요")
-
-            }
-        } catch (error) {
-          console.log(error)
-
-          showAlert("info", "에러가 발생했어요")
+      try {
+        let user_id = btoa(userId);
+        let user_pw = btoa(userPw);
+        let user_email = btoa(userEmail);
+      
+        if (user_id == '' || user_pw == '' || user_email == '') {
+            return dds.toast({
+                content: '입력칸을 확인해주세요'
+            })
         }
+    
+
+        let response = await axios.request({
+          method: 'post',
+          url: `/api/users`,
+          data: {
+            user_id: user_id,
+            user_pw: user_pw,
+            user_email: user_email
+          },
+          headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          responseType: 'json'
+        })
+      
+        let data = response.data
+
+        if (data.status == 1) {
+          Cookies.set('user', data.token)
+
+          showAlert("success", "가입에 성공했어요")
+
+          setTimeout(() => {
+            location.href = '/'
+          }, 1200);
+        } else if (data.status == 2) { // 비번 8자리
+          showAlert("info", "바밀번호는 8자리 이상이여야 해요")
+
+        } else if (data.status == 5) { // 특수문자
+          showAlert("info", "아이디에 특수문자는 입력할 수 없어요")
+
+        } else if (data.status == 0) {
+          showAlert("info", "사용 불가한 아이디 또는 이메일이에요")
+
+        }
+      } catch (error) {
+        console.log(error)
+
+        showAlert("info", "에러가 발생했어요")
+      }
     }
 
     const userFormCheck = {
