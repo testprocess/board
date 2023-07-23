@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import dds from 'deventds/dist/handle'
 import Cookies from 'js-cookie'
 import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
@@ -34,9 +33,9 @@ function Signup() {
 
   
   const { userId, userEmail, userPw } = inputs;
-  const userIdRef = useRef();
-  const userEmailRef = useRef();
-  const userPwRef = useRef();
+  const userIdRef: any = useRef();
+  const userEmailRef: any = useRef();
+  const userPwRef: any = useRef();
 
 
   async function signup() {
@@ -46,9 +45,7 @@ function Signup() {
       let user_email = btoa(userEmail);
     
       if (user_id == '' || user_pw == '' || user_email == '') {
-          return dds.toast({
-              content: '입력칸을 확인해주세요'
-          })
+        return showAlert("info", "입력칸을 확인해주세요")
       }
   
 
@@ -208,7 +205,7 @@ function Signup() {
 
 
           <Stack spacing={1}>
-            <Button variant="contained" onClick={handleClickSignup}>가입 </Button>
+            <Button variant="contained" onClick={handleClickSignup} disableElevation>가입 </Button>
             <Button variant="text" href="/auth/login">이미 계정이 있어요 </Button>
 
           </Stack>

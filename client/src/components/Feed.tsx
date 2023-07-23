@@ -220,7 +220,7 @@ function FeedInput(props) {
     }
 
     return (
-        <Stack sx={{ marginTop: "1rem", marginBottom: "1rem" }} spacing={1}>
+        <Stack sx={{ marginTop: "1rem", marginBottom: "2rem" }} spacing={1}>
             <TextField
                 id="outlined-textarea"
                 label="Feed"
@@ -230,7 +230,7 @@ function FeedInput(props) {
                 multiline
             />
             <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "#000000" : "#fc4242"  }}>{input.length}/1000</Typography>
-            <Button variant="contained" onClick={handleClick}><SendIcon /> </Button>
+            <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
         </Stack>
     );
@@ -244,7 +244,7 @@ function FeedBody({ feed }) {
         )
     }
     return (
-        <Card sx={{ marginBottom: '1rem' }}>
+        <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
             <CardContent>
                 <FeedProfile feed={feed}></FeedProfile>
 
@@ -335,10 +335,10 @@ function FeedMenu({ feed }) {
             'aria-labelledby': 'basic-button',
             }}>
 
-            <MenuItem sx={{ color: "#000000" }} onClick={handleClose}>info</MenuItem>
+            <MenuItem color="primary" onClick={handleClose}>info</MenuItem>
 
             {(isLogin && feed.owner == userId) ? (
-                <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
+                <MenuItem color="danger" onClick={handleDelete}>delete</MenuItem>
                
             ) : (
                 <></>
