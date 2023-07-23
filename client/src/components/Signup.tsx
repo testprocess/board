@@ -16,6 +16,22 @@ function Signup() {
       userEmail: '',
       userPw: ''
   });
+
+  const [inputsVaild, setInputsVaild] = useState({
+    userId: {
+      isVaild: true,
+      message: ''
+    },
+    userEmail: {
+      isVaild: true,
+      message: ''
+    },
+    userPw: {
+      isVaild: true,
+      message: ''
+    },
+});
+
   
   const { userId, userEmail, userPw } = inputs;
   const userIdRef = useRef();
@@ -23,106 +39,109 @@ function Signup() {
   const userPwRef = useRef();
 
 
-    async function signup() {
-      try {
-        let user_id = btoa(userId);
-        let user_pw = btoa(userPw);
-        let user_email = btoa(userEmail);
-      
-        if (user_id == '' || user_pw == '' || user_email == '') {
-            return dds.toast({
-                content: '입력칸을 확인해주세요'
-            })
-        }
+  async function signup() {
+    try {
+      let user_id = btoa(userId);
+      let user_pw = btoa(userPw);
+      let user_email = btoa(userEmail);
     
+      if (user_id == '' || user_pw == '' || user_email == '') {
+          return dds.toast({
+              content: '입력칸을 확인해주세요'
+          })
+      }
+  
 
-        let response = await axios.request({
-          method: 'post',
-          url: `/api/users`,
-          data: {
-            user_id: user_id,
-            user_pw: user_pw,
-            user_email: user_email
-          },
-          headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-          },
-          responseType: 'json'
-        })
+      let response = await axios.request({
+        method: 'post',
+        url: `/api/users`,
+        data: {
+          user_id: user_id,
+          user_pw: user_pw,
+          user_email: user_email
+        },
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        responseType: 'json'
+      })
+    
+      let data = response.data
+
+      if (data.status == 1) {
+        Cookies.set('user', data.token)
+
+        showAlert("success", "가입에 성공했어요")
+
+        setTimeout(() => {
+          location.href = '/'
+        }, 1200);
+      } else if (data.status == 2) { // 비번 8자리
+        showAlert("info", "바밀번호는 8자리 이상이여야 해요")
+
+      } else if (data.status == 5) { // 특수문자
+        showAlert("info", "아이디에 특수문자는 입력할 수 없어요")
+
+      } else if (data.status == 0) {
+        showAlert("info", "사용 불가한 아이디 또는 이메일이에요")
+
+      }
+    } catch (error) {
+      console.log(error)
+
+      showAlert("info", "에러가 발생했어요")
+    }
+  }
+
+  const userFormCheck = {
+    userId: function (value) {
+      let pattern_spc = /[^\w]/;
       
-        let data = response.data
-
-        if (data.status == 1) {
-          Cookies.set('user', data.token)
-
-          showAlert("success", "가입에 성공했어요")
-
-          setTimeout(() => {
-            location.href = '/'
-          }, 1200);
-        } else if (data.status == 2) { // 비번 8자리
-          showAlert("info", "바밀번호는 8자리 이상이여야 해요")
-
-        } else if (data.status == 5) { // 특수문자
-          showAlert("info", "아이디에 특수문자는 입력할 수 없어요")
-
-        } else if (data.status == 0) {
-          showAlert("info", "사용 불가한 아이디 또는 이메일이에요")
-
+      if (pattern_spc.test(String(value)) == true || value == '' ) {
+        return {
+          bool: false,
+          message: "특수문자를 포함할 수 없어요"
         }
-      } catch (error) {
-        console.log(error)
-
-        showAlert("info", "에러가 발생했어요")
+      } else {
+        return {
+          bool: true,
+          message: ""
+        }
+      }
+    },
+      
+      userPw: function (value) {
+      let form_pw = value
+      
+      if (value.length < 8) {
+        return {
+          bool: false,
+          message: "비밀번호는 8자리 이상이어야 해요"
+        }
+      } else {
+        return {
+          bool: true,
+          message: ""
+        }
+      }
+    },
+      
+    userEmail: function (value) {
+      let patten_eml = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+      
+      if (patten_eml.test(String(value)) == false) {
+        return {
+          bool: false,
+          message: "이메일 형식을 확인해주세요"
+        }
+      } else {
+        return {
+          bool: true,
+          message: ""
+        }
       }
     }
-
-    const userFormCheck = {
-        switchValidMessage: function (form, boolean) {
-            if (boolean) {
-                form.classList.add("is-valid")
-                form.classList.remove("is-invalid")
-            } else {
-                form.classList.add("is-invalid")
-                form.classList.remove("is-valid")
-            }
-        },
-        
-        checkId: function (e) {
-            const { value, name } = e.target; 
-            let pattern_spc = /[^\w]/;
-            
-            if (pattern_spc.test(String(value)) == true || value == '' ) {
-                userFormCheck.switchValidMessage(userIdRef.current, false)
-            } else {
-                userFormCheck.switchValidMessage(userIdRef.current, true)
-            }
-        },
-        
-        checkPassword: function (e) {
-            const { value, name } = e.target; 
-
-            let form_pw = value
-            
-            if (value.length < 8) {
-                userFormCheck.switchValidMessage(userPwRef.current, false)
-            } else {
-                userFormCheck.switchValidMessage(userPwRef.current, true)
-            }
-        },
-        
-        checkEmail: function (e) {
-            const { value, name } = e.target; 
-
-            let patten_eml = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-            
-            if (patten_eml.test(String(value)) == false) {
-                userFormCheck.switchValidMessage(userEmailRef.current, false)
-            } else {
-                userFormCheck.switchValidMessage(userEmailRef.current, true)
-            }
-        }
-    }
+  }
 
 
   const handleClickSignup = () => {
@@ -135,8 +154,25 @@ function Signup() {
       ...inputs,
       [name]: value
     });
+
+    validForm({ name: name, value: value })
   };
 
+  const validForm = ({ name, value }) => {
+    console.log(name, value, inputsVaild )
+
+    let check = userFormCheck[name](value)
+
+    setInputsVaild({
+      ...inputsVaild,
+      [name]: {
+        isVaild: check.bool,
+        message:  check.message
+      }
+    })
+
+    
+  }
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
@@ -163,9 +199,9 @@ function Signup() {
           <h5 className="card-title text-center mb-5 fw-light fs-5">회원가입</h5>
 
           <Stack spacing={2} sx={{ marginBottom: '1rem' }}>
-            <TextField type="text" label="Id" variant="outlined" name="userId" ref={userIdRef} onInput={userFormCheck.checkId} onChange={onChange} value={userId} required autoFocus />
-            <TextField type="email" label="Email" variant="outlined" name="userEmail" ref={userEmailRef} onInput={userFormCheck.checkEmail} onChange={onChange} value={userEmail} required />            
-            <TextField type="password" label="Password" variant="outlined" ref={userPwRef} onInput={userFormCheck.checkPassword} onChange={onChange} value={userPw} name="userPw" required />
+            <TextField type="text" label="Id" variant="outlined" name="userId" error={!inputsVaild['userId'].isVaild} helperText={inputsVaild['userId'].message} ref={userIdRef} onChange={onChange} value={userId} required autoFocus />
+            <TextField type="email" label="Email" variant="outlined" name="userEmail" error={!inputsVaild['userEmail'].isVaild} helperText={inputsVaild['userEmail'].message} ref={userEmailRef} onChange={onChange} value={userEmail} required />            
+            <TextField type="password" label="Password" variant="outlined" error={!inputsVaild['userPw'].isVaild} ref={userPwRef} helperText={inputsVaild['userPw'].message} onChange={onChange} value={userPw} name="userPw" required />
 
           </Stack>
 
