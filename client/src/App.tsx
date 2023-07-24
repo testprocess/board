@@ -5,9 +5,6 @@ import { Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleDarkmode } from './features/appSlice';
-
-
 
 import RootPage from './pages/Root'
 import SignupPage from './pages/Signup'
@@ -23,8 +20,6 @@ const App = () => {
             mode: isDarkmode === true ? 'dark' : 'light',
             primary: {
                 main: '#0d6efd',
-                // dark: will be calculated from palette.primary.main,
-                // contrastText: will be calculated to contrast with palette.primary.main
             },
         },
     });

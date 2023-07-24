@@ -29,8 +29,8 @@ function Navbar(props) {
               </Typography>
               {props.children}
 
-              <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="primary">
-                {isDarkmode === true ? <Brightness7Icon /> : <Brightness4Icon />}
+              <IconButton sx={{ ml: 1}} onClick={toggleColorMode} color="primary">
+                {isDarkmode === true ? <Brightness7Icon sx={{ fontSize: "1.2rem"  }} /> : <Brightness4Icon sx={{ fontSize: "1.2rem"  }} />}
             </IconButton>
             </Toolbar>
           </AppBar>

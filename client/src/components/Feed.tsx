@@ -86,7 +86,6 @@ function Feed() {
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const feeds = useSelector((state: any) => state.feed.feeds);
 
-    //const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: '', type: 0}])
     const [fetching, setFetching] = useState(0);
     const [fetchingLock, setFetchingLock] = useState(false);
     const [fetchingStop, setFetchingStop] = useState(false);
@@ -110,7 +109,7 @@ function Feed() {
 
     useEffect(() => {
         if (!fetchingStop) {
-            const loadData = async () => {
+            const loadFeedData = async () => {
                 let getFeeds = await getFeed(fetching, {
                     isrange: 'true',
                     range: 10,
@@ -132,14 +131,12 @@ function Feed() {
                         type: element.type, 
                     }))
                 }
-
-
-                //setFeeds([...feeds, ...getFeeds.data.result])
             };
     
-            loadData()  
+            loadFeedData()  
         }
     }, [fetching])
+
 
     document.addEventListener('scroll', handleScroll)
 
