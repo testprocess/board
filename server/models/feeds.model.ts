@@ -23,19 +23,7 @@ const feedModel = {
     
             return { status: 1, result: getFeed }
 
-            // let selectFeeds = "SELECT * FROM feeds WHERE idx BETWEEN ? AND ?";
-            // const data = await new Promise((resolve, reject) => {
-            //     MySQLConnect.query(selectFeeds, [idxStart, idxEnd], function(err, result) {
-            //         if (err) {
-            //             resolve({status:0})
-            //         }
-            //         resolve({status:1, result:result})
-            //     });
-            // })
-    
-            // return data
         } catch (err) {
-            console.log(err)
             throw Error(err)
         }
     },
@@ -58,24 +46,12 @@ const feedModel = {
     
             return { status: 1 }
 
-            // let insertFeeds = "INSERT INTO feeds(content, owner, date, type) VALUES (?,?,?,?)";
-            // const data = await new Promise((resolve, reject) => {
-            //     MySQLConnect.query(insertFeeds, [content, owner, date, type], function(err, result) {
-            //         if (err) {
-            //             resolve({status:0})
-            //         }
-            //         resolve({status:1})
-            //     });
-            // })
-    
-            // return data
         } catch (err) {
-            console.log(err)
             throw Error(err)
         }
     },
     
-    delete: async function ({ idxFeed, owner }): Promise<{ }> {
+    delete: async function ({ idxFeed, owner }) {
         try {
             const feedRepository = AppDataSource.getRepository(Feed);
             const deleteFeed = await feedRepository.createQueryBuilder('feed')
@@ -86,27 +62,7 @@ const feedModel = {
 
             return { status: 1 }
 
-            // let deleteFeeds = "DELETE FROM feeds WHERE idx = ? AND owner = ?";
-            // const data = await new Promise((resolve, reject) => {
-            //     MySQLConnect.query(deleteFeeds, [idxFeed, owner], function(err, result) {
-            //         const returnResult: any = result;
-    
-            //         if (err) {
-            //             resolve({status:0})
-            //         }
-            //         if (returnResult.affectedRows >= 1) {
-            //             resolve({status:1})
-    
-            //         } else {
-            //             resolve({status:0})
-    
-            //         }
-            //     });
-            // })
-    
-            // return data
         } catch (err) {
-            console.log(err)
             throw Error(err)
         }
     },
@@ -122,27 +78,7 @@ const feedModel = {
 
             return { status: 1 }
 
-            // let updateFeeds = "UPDATE feeds SET content = ? WHERE idx = ? AND owner = ?";
-            // const data = await new Promise((resolve, reject) => {
-            //     MySQLConnect.query(updateFeeds, [contentFeed, idxFeed, owner], function(err, result) {
-            //         const returnResult: any = result;
-    
-            //         if (err) {
-            //             resolve({status:0})
-            //         }
-            //         if (returnResult.affectedRows >= 1) {
-            //             resolve({status:1})
-    
-            //         } else {
-            //             resolve({status:0})
-    
-            //         }
-            //     });
-            // })
-    
-            // return data
         } catch (err) {
-            console.log(err)
             throw Error(err)
         }
     }
