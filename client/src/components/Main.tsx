@@ -87,7 +87,7 @@ function ButtonBox({ isLogin }) {
     if (isLogin) {
         return (
             <Box sx={{ justifyContent: 'center' }}>
-                <Button variant="contained" onClick={handleClickLogout} disableElevation>로그아웃</Button>
+                <Button variant="text" onClick={handleClickLogout} disableElevation>로그아웃</Button>
 
             </Box>
 
@@ -96,8 +96,8 @@ function ButtonBox({ isLogin }) {
 
     return (
         <Box sx={{ justifyContent: 'center' }}>
-            <Button sx={{ marginRight: '0.8rem' }} variant="contained" onClick={handleClickSignup} disableElevation>가입 </Button>
-            <Button variant="contained" onClick={handleClickLogin} disableElevation>로그인 </Button>
+            <Button sx={{ marginRight: '0.2rem' }} variant="text" onClick={handleClickSignup} disableElevation>가입 </Button>
+            <Button variant="text" onClick={handleClickLogin} disableElevation>로그인 </Button>
         </Box>
 
     );
