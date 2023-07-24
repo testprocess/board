@@ -338,7 +338,7 @@ function FeedMenu({ feed }) {
             <MenuItem color="primary" onClick={handleClose}>info</MenuItem>
 
             {(isLogin && feed.owner == userId) ? (
-                <MenuItem color="danger" onClick={handleDelete}>delete</MenuItem>
+                <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
                
             ) : (
                 <></>
