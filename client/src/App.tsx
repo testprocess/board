@@ -5,11 +5,14 @@ import { Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 
 import RootPage from './pages/Root'
 import SignupPage from './pages/Signup'
 import LoginPage from './pages/Login'
 import NotfoundPage from './pages/Notfound'
+import ProfilePage from './pages/Profile'
+
 import './App.css'
 
 const App = () => {
@@ -30,19 +33,19 @@ const App = () => {
                 <CssBaseline />
 
                 <Container color="palette.background.default">
-                    <Switch>
-                        <Route exact path="/" component={RootPage} />
+                    <BrowserRouter>
+                        <Switch>
+                            <Route exact path="/" component={RootPage} />
+                            <Route path="/profile" component={ProfilePage} />
 
-                        <Route path="/auth/login" component={LoginPage} />
-                        <Route path="/auth/signup" component={SignupPage} />
+                            <Route path="/auth/login" component={LoginPage} />
+                            <Route path="/auth/signup" component={SignupPage} />
 
-                        <Route path='*' component={NotfoundPage} />
-                    </Switch>
+                            <Route path='*' component={NotfoundPage} />
+                        </Switch>
+                    </BrowserRouter>
                 </Container>
-
             </ThemeProvider>
-
-
         </div>
     );
 };

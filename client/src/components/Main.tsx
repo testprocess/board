@@ -2,43 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Button, Box, Grid } from '@mui/material';
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux';
-import { changeIsLogin, updateUserId } from '../features/authSlice';
 import Navbar from './Navbar'
 
 function Main() {
-    const [isLogin, setLoginStatus] = useState(0);
-    const dispatch = useDispatch();
-
-    const checkLogin = () => {
-        let token = Cookies.get("user")
-        try {
-            let decoded = JSON.parse(atob(token.split('.')[1]));
-            return {
-                isVaild: 1,
-                decoded: decoded
-            }
-        } catch (error) {
-            return {
-                isVaild: 0
-            }
-        }
-    }
-
-    useEffect(() => {
-        let loginStatus = checkLogin()
-        dispatch(changeIsLogin({
-            isLogin: loginStatus.isVaild == 1 ? true : false
-        }))
-
-        if (loginStatus.isVaild == 1) {
-            dispatch(updateUserId({
-                userId: loginStatus.decoded.user_id
-            }))
-        }
-
-        setLoginStatus(loginStatus.isVaild)
-    }, []);
-
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
 
     return (
         <Grid container sx={{ marginTop: "3rem" }} spacing={3}>
