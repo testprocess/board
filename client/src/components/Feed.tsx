@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import { Popup } from './Alert'
+import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove } from '../features/feedSlice';
 
@@ -86,7 +86,6 @@ function Feed() {
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const feeds = useSelector((state: any) => state.feed.feeds);
 
-    //const [feeds, setFeeds] = useState([{idx: 0, content:'', owner: '', date: '', type: 0}])
     const [fetching, setFetching] = useState(0);
     const [fetchingLock, setFetchingLock] = useState(false);
     const [fetchingStop, setFetchingStop] = useState(false);
@@ -110,7 +109,7 @@ function Feed() {
 
     useEffect(() => {
         if (!fetchingStop) {
-            const loadData = async () => {
+            const loadFeedData = async () => {
                 let getFeeds = await getFeed(fetching, {
                     isrange: 'true',
                     range: 10,
@@ -132,50 +131,39 @@ function Feed() {
                         type: element.type, 
                     }))
                 }
-
-
-                //setFeeds([...feeds, ...getFeeds.data.result])
             };
     
-            loadData()  
+            loadFeedData()  
         }
     }, [fetching])
+
 
     document.addEventListener('scroll', handleScroll)
 
     if (isLogin) {
         return (
-            <Grid container spacing={3}>
-                <Grid item xs md>
-                </Grid>
-                <Grid item xs={10} md={6}>
+            <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
+                <Grid item xs={12} md={6}>
                     <FeedInput></FeedInput>
+
                     {feeds.map(feed => (
                         <FeedBody feed={feed}></FeedBody>
+    
                     ))}
-
                     <FeedSkeleton></FeedSkeleton>
-                    <FeedSkeleton></FeedSkeleton>
-
-                </Grid>
-                <Grid item xs md>
                 </Grid>
             </Grid>
         );
     }
 
     return (
-        <Grid container sx={{ marginTop: "1rem" }} spacing={3}>
-            <Grid item xs md>
-            </Grid>
-            <Grid item xs={10} md={6}>
+        <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
+            <Grid item xs={12} md={6}>
                 {feeds.map(feed => (
                     <FeedBody feed={feed}></FeedBody>
 
                 ))}
                 <FeedSkeleton></FeedSkeleton>
-            </Grid>
-            <Grid item xs md>
             </Grid>
         </Grid>
     );
@@ -220,7 +208,7 @@ function FeedInput(props) {
     }
 
     return (
-        <Stack sx={{ marginTop: "1rem", marginBottom: "1rem" }} spacing={1}>
+        <Stack sx={{ marginTop: "1rem", marginBottom: "2rem" }} spacing={1}>
             <TextField
                 id="outlined-textarea"
                 label="Feed"
@@ -230,8 +218,9 @@ function FeedInput(props) {
                 multiline
             />
             <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "#000000" : "#fc4242"  }}>{input.length}/1000</Typography>
-            <Button variant="contained" onClick={handleClick}><SendIcon /> </Button>
+            <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
+
         </Stack>
     );
 }
@@ -244,7 +233,7 @@ function FeedBody({ feed }) {
         )
     }
     return (
-        <Card sx={{ marginBottom: '1rem' }}>
+        <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
             <CardContent>
                 <FeedProfile feed={feed}></FeedProfile>
 
@@ -287,6 +276,8 @@ function FeedMenu({ feed }) {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [alertTrigger, setAlertTrigger] = useState(0)
+    const [alertDialogTrigger, setAlertDialogTrigger] = useState(0)
+
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const userId = useSelector((state: any) => state.auth.userId);
 
@@ -314,6 +305,11 @@ function FeedMenu({ feed }) {
         handleClose()
     }
 
+    const handleShowInfo = () => {
+        setAlertDialogTrigger(alertDialogTrigger + 1)
+        handleClose()
+    }
+
     return (
         <>
         <IconButton
@@ -335,7 +331,7 @@ function FeedMenu({ feed }) {
             'aria-labelledby': 'basic-button',
             }}>
 
-            <MenuItem sx={{ color: "#000000" }} onClick={handleClose}>info</MenuItem>
+            <MenuItem color="primary" onClick={handleShowInfo}>info</MenuItem>
 
             {(isLogin && feed.owner == userId) ? (
                 <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
@@ -347,6 +343,9 @@ function FeedMenu({ feed }) {
 
         <Popup trigger={alertTrigger} message="삭제 완료" severity="success"></Popup>
 
+        <AlertDialog trigger={alertDialogTrigger} title="피드 정보">
+            <p>{feed.date}</p>
+        </AlertDialog>
         </>
 
     )

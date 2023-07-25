@@ -97,7 +97,7 @@ function Login() {
           </Stack>
 
           <Stack spacing={1}>
-            <Button variant="contained" onClick={handleClickLogin}>로그인 </Button>
+            <Button variant="contained" onClick={handleClickLogin} disableElevation>로그인 </Button>
             <Button variant="text" href="/auth/signup">빠른 회원가입 </Button>
 
           </Stack>

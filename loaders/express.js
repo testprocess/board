@@ -23,6 +23,12 @@ export async function init (app) {
     app.use(bodyParser.urlencoded({extended : true}));
     app.use(cookieParser());
 
+    app.use((err, req, res, next) => {
+       res.status(500).send({
+            msg: "server error"
+       })
+    })
+
     app.use('/dist', express.static('client/dist'));
 
     app.use('/api', apiRouter);
