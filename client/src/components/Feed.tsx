@@ -142,37 +142,28 @@ function Feed() {
 
     if (isLogin) {
         return (
-            <Grid container spacing={3}>
-                <Grid item xs md>
-                </Grid>
-                <Grid item xs={10} md={6}>
+            <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
+                <Grid item xs={12} md={6}>
                     <FeedInput></FeedInput>
+
                     {feeds.map(feed => (
                         <FeedBody feed={feed}></FeedBody>
+    
                     ))}
-
                     <FeedSkeleton></FeedSkeleton>
-                    <FeedSkeleton></FeedSkeleton>
-
-                </Grid>
-                <Grid item xs md>
                 </Grid>
             </Grid>
         );
     }
 
     return (
-        <Grid container sx={{ marginTop: "1rem" }} spacing={3}>
-            <Grid item xs md>
-            </Grid>
-            <Grid item xs={10} md={6}>
+        <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
+            <Grid item xs={12} md={6}>
                 {feeds.map(feed => (
                     <FeedBody feed={feed}></FeedBody>
 
                 ))}
                 <FeedSkeleton></FeedSkeleton>
-            </Grid>
-            <Grid item xs md>
             </Grid>
         </Grid>
     );

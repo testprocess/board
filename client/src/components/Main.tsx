@@ -51,10 +51,14 @@ function ButtonBox({ isLogin }) {
         location.href = '/'
     }
 
+    const handleClickProfile = () => {
+        location.href = '/profile'
+    }
+
     if (isLogin) {
         return (
             <Box sx={{ justifyContent: 'center' }}>
-                <Button variant="text" onClick={handleClickLogout} disableElevation>로그아웃</Button>
+                <Button variant="text" onClick={handleClickProfile} disableElevation>프로필</Button>
 
             </Box>
 

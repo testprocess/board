@@ -32,6 +32,13 @@ function Profile() {
 
     const handleWithdrawal = () => {
         deleteUser(userId)
+        document.cookie = 'user=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+        location.href = '/'
+    }
+
+    const handleClickLogout = () => {
+        document.cookie = 'user=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+        location.href = '/'
     }
 
     useEffect(() => {
@@ -48,7 +55,15 @@ function Profile() {
                 {userId}
                 {isLogin}
 
-                <Button onClick={handleWithdrawal}>회원탈퇴</Button>
+
+                <br />
+
+                <Button onClick={handleClickLogout}>로그아웃</Button>
+
+                <br />
+
+
+                <Button sx={{ color: "#d12828" }} onClick={handleWithdrawal}>회원탈퇴</Button>
 
             </Grid>
             <Grid item xs md>
