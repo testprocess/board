@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
+import { Button, Box, Grid, TextField, Stack, Alert, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 
 
@@ -38,4 +38,41 @@ function Popup(props) {
     )
 }
 
-export { Popup }
+
+function AlertDialog(props) {
+    const [open, setOpen] = React.useState(false);
+
+    useEffect(() => {
+        if (props.trigger > 0) {
+            setOpen(true);
+        }
+    }, [props.trigger])
+  
+
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+  
+    return (
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+
+          <DialogTitle id="alert-dialog-title">
+            {props.title}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {props.children}
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
+export { Popup, AlertDialog }

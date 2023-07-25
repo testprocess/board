@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import { Popup } from './Alert'
+import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove } from '../features/feedSlice';
+
 
 
 import dds from 'deventds/dist/handle'
@@ -229,6 +230,7 @@ function FeedInput(props) {
             <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "#000000" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
+
         </Stack>
     );
 }
@@ -284,6 +286,8 @@ function FeedMenu({ feed }) {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [alertTrigger, setAlertTrigger] = useState(0)
+    const [alertDialogTrigger, setAlertDialogTrigger] = useState(0)
+
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const userId = useSelector((state: any) => state.auth.userId);
 
@@ -311,6 +315,11 @@ function FeedMenu({ feed }) {
         handleClose()
     }
 
+    const handleShowInfo = () => {
+        setAlertDialogTrigger(alertDialogTrigger + 1)
+        handleClose()
+    }
+
     return (
         <>
         <IconButton
@@ -332,7 +341,7 @@ function FeedMenu({ feed }) {
             'aria-labelledby': 'basic-button',
             }}>
 
-            <MenuItem color="primary" onClick={handleClose}>info</MenuItem>
+            <MenuItem color="primary" onClick={handleShowInfo}>info</MenuItem>
 
             {(isLogin && feed.owner == userId) ? (
                 <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
@@ -344,6 +353,9 @@ function FeedMenu({ feed }) {
 
         <Popup trigger={alertTrigger} message="삭제 완료" severity="success"></Popup>
 
+        <AlertDialog trigger={alertDialogTrigger} title="피드 정보">
+            <p>{feed.date}</p>
+        </AlertDialog>
         </>
 
     )

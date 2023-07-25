@@ -20,11 +20,15 @@ function Navbar(props) {
         
     }
 
+    const handleTitleClick = () => {
+        location.href = '/'
+    }
+
     return (
         <Box sx={{ flexGrow: 1, width: '100%' }} >
           <AppBar position="fixed" sx={{ backdropFilter: "blur(8px)", backgroundColor: colorMode, boxShadow: "none" }}>
             <Toolbar>
-              <Typography component="div" color="text.primary" sx={{ flexGrow: 1, fontSize: "1rem" }}>
+              <Typography component="div" color="text.primary" onClick={handleTitleClick} sx={{ flexGrow: 1, fontSize: "1rem" }}>
                 <b>Board</b>
               </Typography>
               {props.children}
