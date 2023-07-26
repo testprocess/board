@@ -194,18 +194,30 @@ function FeedInput(props) {
             return 0
         }
     
-        dispatch(unshift({
-            idx: feeds[0].idx + 1, 
-            content: input, 
-            owner: userId, 
-            date: dayjs().format("YYYY.MM.DD.HH.mm.ss"), 
-            type: 1, 
-        }))
-
-        //props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: userId, date: dayjs().format("YYYY.MM.DD.HH.mm.ss")}, ...props.feed.feeds])
         insertFeed(input)
         setInput('')
+
+        setTimeout(() => {
+            patchFeed()
+        }, 500)
     }
+
+    const patchFeed = async () => {
+        const getFeeds = await getFeed(0, {
+            isrange: 'true',
+            range: 1,
+            order: "DESC"
+        })
+
+        dispatch(unshift({
+            idx: getFeeds.data.result[0].idx, 
+            content: getFeeds.data.result[0].content, 
+            owner: getFeeds.data.result[0].owner, 
+            date: getFeeds.data.result[0].date, 
+            type: getFeeds.data.result[0].type 
+        }))
+    }
+    
 
     return (
         <Stack sx={{ marginTop: "1rem", marginBottom: "2rem" }} spacing={1}>
