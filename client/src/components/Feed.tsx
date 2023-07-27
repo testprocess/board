@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
+import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem, InputAdornment } from '@mui/material';
 import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove } from '../features/feedSlice';
@@ -229,7 +229,7 @@ function FeedInput(props) {
                 value={input}
                 multiline
             />
-            <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "#000000" : "#fc4242"  }}>{input.length}/1000</Typography>
+            <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "text.primary" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
 
@@ -244,6 +244,7 @@ function FeedBody({ feed }) {
             <></>
         )
     }
+
     return (
         <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
             <CardContent>
@@ -357,6 +358,14 @@ function FeedMenu({ feed }) {
 
         <AlertDialog trigger={alertDialogTrigger} title="피드 정보">
             <p>{feed.date}</p>
+            <TextField
+                label="주소"
+                sx={{ m: 1, width: '25ch' }}
+                defaultValue={location.origin + '/feed/' + feed.idx}
+
+                InputProps={{
+                    startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}/>
         </AlertDialog>
         </>
 
@@ -377,3 +386,4 @@ function FeedSkeleton() {
 }
   
 export default Feed;
+export { FeedBody }

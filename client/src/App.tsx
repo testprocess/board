@@ -12,6 +12,7 @@ import SignupPage from './pages/Signup'
 import LoginPage from './pages/Login'
 import NotfoundPage from './pages/Notfound'
 import ProfilePage from './pages/Profile'
+import ContentPage from './pages/Content'
 
 import './App.css'
 
@@ -37,6 +38,8 @@ const App = () => {
                         <Switch>
                             <Route exact path="/" component={RootPage} />
                             <Route path="/profile" component={ProfilePage} />
+
+                            <Route path="/feed/*" component={ContentPage} />
 
                             <Route path="/auth/login" component={LoginPage} />
                             <Route path="/auth/signup" component={SignupPage} />

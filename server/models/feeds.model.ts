@@ -11,6 +11,7 @@ type SelectRangeType = {
 const feedModel = {
     get: async function ({ idxStart, order, range }: SelectRangeType) {
         try {
+            
             const feedRepository = AppDataSource.getRepository(Feed);
             const getFeed = await feedRepository.find({
                 take: range,
@@ -19,6 +20,23 @@ const feedModel = {
                 order: {
                     date: order,
                 },
+            })
+    
+            return { status: 1, result: getFeed }
+
+        } catch (err) {
+            throw Error(err)
+        }
+    },
+
+    getFromIdx: async function ({ idx }) {
+        try {
+            
+            const feedRepository = AppDataSource.getRepository(Feed);
+            const getFeed = await feedRepository.find({
+                where: {
+                    idx: idx
+                }
             })
     
             return { status: 1, result: getFeed }

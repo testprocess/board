@@ -52,13 +52,23 @@ function Profile() {
             <Grid item xs={10} md={6} sx={{ marginTop: "6rem" }}>
                 <Navbar></Navbar>
 
-                {userId}
-                {isLogin}
+                
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center">
+                    <Typography variant="h4">{userId}</Typography>
+                    <Button sx={{ marginTop: "1rem" }} onClick={handleClickLogout}>로그아웃</Button>
+
+                </Grid>
+
 
 
                 <br />
+                <b>회원 설정</b>
+                <hr />
 
-                <Button onClick={handleClickLogout}>로그아웃</Button>
 
                 <br />
 
