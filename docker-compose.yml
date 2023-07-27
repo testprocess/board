@@ -14,6 +14,7 @@ services:
       DB_USER: root
       DB_PASS: ${MYSQL_ROOT_PASSWORD}
       DB_PORT: 13310
+      JWT_SECRET: ${MAIN_JWT_SECRET}
       NODE_ENV: production
       VIRTUAL_HOST: board.devent.kr
       LETSENCRYPT_HOST: board.devent.kr
