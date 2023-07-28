@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkmode } from '../features/appSlice';
+import { Link } from "react-router-dom"
 
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -29,7 +30,10 @@ function Navbar(props) {
           <AppBar position="fixed" sx={{ backdropFilter: "blur(8px)", backgroundColor: colorMode, boxShadow: "none" }}>
             <Toolbar>
               <Typography component="div" color="text.primary" onClick={handleTitleClick} sx={{ flexGrow: 1, fontSize: "1rem" }}>
-                <b>Board</b>
+                <Link to={'/'}>
+                    <b>Board</b>
+
+                </Link>
               </Typography>
               {props.children}
 

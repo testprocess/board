@@ -63,6 +63,10 @@ const userController = {
         try {
             let userId = req.params.user_id;
             let userInfo = await userModel.read({ userId: userId });
+
+            if (userInfo.status <= 0) {
+                return res.status(200).json({ status: 0 })
+            }
     
             let result = {
                 idx: userInfo.user.idx, 

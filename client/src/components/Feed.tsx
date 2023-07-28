@@ -3,6 +3,7 @@ import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Ske
 import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove } from '../features/feedSlice';
+import { Link } from "react-router-dom"
 
 
 import dds from 'deventds/dist/handle'
@@ -262,14 +263,22 @@ function FeedBody({ feed }) {
 function FeedProfile({ feed }) {
     const dateSplit = feed.date.split('.')
 
+
     return (
         <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem", alignContent: 'center' }}>
             <Grid container wrap="nowrap" spacing={2} sx={{ alignContent: 'center', alignItems: 'center' }}>
                 <Grid item>
-                    <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.slice(0, 1)}</Avatar>
+                    <Link to={'/user/' + feed.owner}>
+                        <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.slice(0, 1)}</Avatar>
+
+                    </Link>
                 </Grid>
+
                 <Grid item xs zeroMinWidth sx={{ alignContent: 'center'}}>
-                    <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
+                <Link to={'/user/' + feed.owner}>
+                <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
+
+                </Link>
                     <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{new Date(dateSplit[0], dateSplit[1], dateSplit[2], dateSplit[3], dateSplit[4], dateSplit[5]).toDateString()}</Typography>
 
                 </Grid>

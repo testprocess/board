@@ -11,7 +11,9 @@ import RootPage from './pages/Root'
 import SignupPage from './pages/Signup'
 import LoginPage from './pages/Login'
 import NotfoundPage from './pages/Notfound'
-import ProfilePage from './pages/Profile'
+import MyProfilePage from './pages/MyProfile'
+import ProfilePage from './pages/UserProfile'
+
 import ContentPage from './pages/Content'
 
 import './App.css'
@@ -37,10 +39,12 @@ const App = () => {
                     <BrowserRouter>
                         <Switch>
                             <Route exact path="/" component={RootPage} />
-                            <Route path="/profile" component={ProfilePage} />
+                            <Route path="/profile" component={MyProfilePage} />
 
                             <Route path="/feed/*" component={ContentPage} />
+                            <Route path="/user/*" component={ProfilePage} />
 
+                            
                             <Route path="/auth/login" component={LoginPage} />
                             <Route path="/auth/signup" component={SignupPage} />
 
