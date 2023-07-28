@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha",
     "start": "NODE_ENV=production node app.js",
-    "start:dev": "NODE_ENV=development node app.js",
+    "start:dev": "JWT_SECRET=dfwcrq3rqrq NODE_ENV=development node app.js",
     "bundle": "webpack -w --mode=development",
     "bundle:prod": "webpack --mode=production",
     "compile": "tsc -w",

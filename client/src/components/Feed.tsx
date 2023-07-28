@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
+import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem, InputAdornment } from '@mui/material';
 import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove } from '../features/feedSlice';
+import { Link } from "react-router-dom"
 
 
 import dds from 'deventds/dist/handle'
@@ -194,18 +195,30 @@ function FeedInput(props) {
             return 0
         }
     
-        dispatch(unshift({
-            idx: feeds[0].idx + 1, 
-            content: input, 
-            owner: userId, 
-            date: dayjs().format("YYYY.MM.DD.HH.mm.ss"), 
-            type: 1, 
-        }))
-
-        //props.feed.setFeeds([{idx: props.feed.feeds[0].idx + 1, content: input, owner: userId, date: dayjs().format("YYYY.MM.DD.HH.mm.ss")}, ...props.feed.feeds])
         insertFeed(input)
         setInput('')
+
+        setTimeout(() => {
+            patchFeed()
+        }, 500)
     }
+
+    const patchFeed = async () => {
+        const getFeeds = await getFeed(0, {
+            isrange: 'true',
+            range: 1,
+            order: "DESC"
+        })
+
+        dispatch(unshift({
+            idx: getFeeds.data.result[0].idx, 
+            content: getFeeds.data.result[0].content, 
+            owner: getFeeds.data.result[0].owner, 
+            date: getFeeds.data.result[0].date, 
+            type: getFeeds.data.result[0].type 
+        }))
+    }
+    
 
     return (
         <Stack sx={{ marginTop: "1rem", marginBottom: "2rem" }} spacing={1}>
@@ -217,7 +230,7 @@ function FeedInput(props) {
                 value={input}
                 multiline
             />
-            <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "#000000" : "#fc4242"  }}>{input.length}/1000</Typography>
+            <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "text.primary" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
 
@@ -232,6 +245,7 @@ function FeedBody({ feed }) {
             <></>
         )
     }
+
     return (
         <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
             <CardContent>
@@ -249,14 +263,22 @@ function FeedBody({ feed }) {
 function FeedProfile({ feed }) {
     const dateSplit = feed.date.split('.')
 
+
     return (
         <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem", alignContent: 'center' }}>
             <Grid container wrap="nowrap" spacing={2} sx={{ alignContent: 'center', alignItems: 'center' }}>
                 <Grid item>
-                    <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.slice(0, 1)}</Avatar>
+                    <Link to={'/user/' + feed.owner}>
+                        <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.slice(0, 1)}</Avatar>
+
+                    </Link>
                 </Grid>
+
                 <Grid item xs zeroMinWidth sx={{ alignContent: 'center'}}>
-                    <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
+                <Link to={'/user/' + feed.owner}>
+                <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
+
+                </Link>
                     <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{new Date(dateSplit[0], dateSplit[1], dateSplit[2], dateSplit[3], dateSplit[4], dateSplit[5]).toDateString()}</Typography>
 
                 </Grid>
@@ -345,6 +367,14 @@ function FeedMenu({ feed }) {
 
         <AlertDialog trigger={alertDialogTrigger} title="피드 정보">
             <p>{feed.date}</p>
+            <TextField
+                label="주소"
+                sx={{ m: 1, width: '25ch' }}
+                defaultValue={location.origin + '/feed/' + feed.idx}
+
+                InputProps={{
+                    startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}/>
         </AlertDialog>
         </>
 
@@ -365,3 +395,4 @@ function FeedSkeleton() {
 }
   
 export default Feed;
+export { FeedBody }

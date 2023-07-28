@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Box, Grid } from '@mui/material';
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from "react-router-dom"
+
 import Navbar from './Navbar'
 
 function Main() {
@@ -58,8 +60,9 @@ function ButtonBox({ isLogin }) {
     if (isLogin) {
         return (
             <Box sx={{ justifyContent: 'center' }}>
-                <Button variant="text" onClick={handleClickProfile} disableElevation>프로필</Button>
-
+                <Link to={'/profile'}>
+                    <Button variant="text" disableElevation>프로필</Button>
+                </Link>
             </Box>
 
         );
@@ -67,8 +70,12 @@ function ButtonBox({ isLogin }) {
 
     return (
         <Box sx={{ justifyContent: 'center' }}>
-            <Button sx={{ marginRight: '0.2rem' }} variant="text" onClick={handleClickSignup} disableElevation>가입 </Button>
-            <Button variant="text" onClick={handleClickLogin} disableElevation>로그인 </Button>
+            <Link to={'/auth/signup'}>
+                <Button sx={{ marginRight: '0.2rem' }} variant="text" disableElevation>가입 </Button>
+            </Link>
+            <Link to={'/auth/login'}>
+                <Button variant="text" disableElevation>로그인 </Button>
+            </Link>
         </Box>
 
     );

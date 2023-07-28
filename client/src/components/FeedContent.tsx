@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
 import { Popup } from './Alert'
+import { FeedBody } from './Feed'
 import { useDispatch, useSelector } from 'react-redux';
 
 import axios from "axios"
@@ -8,41 +10,39 @@ import Cookies from 'js-cookie'
 import Navbar from './Navbar'
 
 
-async function deleteUser(userId) {
-    let token = Cookies.get("user")
-    
+async function getFeed(idx) {
     let response = await axios.request({
-        method: 'delete',
-        url: `/api/users/${userId}`,
+        method: 'get',
+        url: `/api/feeds/${idx}`,
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "x-access-token": token
+            "Content-Type": "application/x-www-form-urlencoded"
         },
         responseType: 'json'
     })
 
+
     return response.data
 }
 
-function Profile() {
+function FeedContent() {
     const dispatch = useDispatch();
 
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const userId = useSelector((state: any) => state.auth.userId);
+    const [content, setContent] = useState([{idx: 0, content:'', owner: '', date: '', type: 1}])
 
-    const handleWithdrawal = () => {
-        deleteUser(userId)
-        document.cookie = 'user=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
-        location.href = '/'
-    }
 
-    const handleClickLogout = () => {
-        document.cookie = 'user=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
-        location.href = '/'
+    const fetchFeed = async () => {
+        const feedIdx = Number(location.pathname.split('/')[2])
+        const getFeedData = await getFeed(feedIdx)
+
+        setContent([{...getFeedData.data.result[0]}])
     }
 
     useEffect(() => {
-        console.log(isLogin, userId)
+        fetchFeed()
+
+
     }, [])
 
     return (
@@ -52,18 +52,9 @@ function Profile() {
             <Grid item xs={10} md={6} sx={{ marginTop: "6rem" }}>
                 <Navbar></Navbar>
 
-                {userId}
-                {isLogin}
-
-
-                <br />
-
-                <Button onClick={handleClickLogout}>로그아웃</Button>
-
-                <br />
-
-
-                <Button sx={{ color: "#d12828" }} onClick={handleWithdrawal}>회원탈퇴</Button>
+                {content.map(feed => (
+                    <FeedBody feed={feed}></FeedBody>
+                ))}
 
             </Grid>
             <Grid item xs md>
@@ -73,4 +64,4 @@ function Profile() {
 
 }
 
-export default Profile;
+export default FeedContent;

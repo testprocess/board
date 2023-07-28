@@ -3,6 +3,7 @@ import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import Cookies from 'js-cookie'
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 
 function Login() {
@@ -98,7 +99,9 @@ function Login() {
 
           <Stack spacing={1}>
             <Button variant="contained" onClick={handleClickLogin} disableElevation>로그인 </Button>
-            <Button variant="text" href="/auth/signup">빠른 회원가입 </Button>
+            <Link to={'/auth/signup'}>
+              <Button variant="text">빠른 회원가입 </Button>
+            </Link>
 
           </Stack>
 

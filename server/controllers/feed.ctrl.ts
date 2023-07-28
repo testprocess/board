@@ -13,7 +13,7 @@ const feedController = {
     get: async function  (req, res) {
         let idx = Number(req.params.idx) || 0;
         let isRange = String(req.query.isrange) || 'false'
-        let order = String(req.query.order) || 'ASC'
+        let order = String(req.query.order || 'ASC')
         let allowOrder = ['ASC', 'DESC']
 
         let idxRange = Number(req.query.range) || 0;
@@ -31,12 +31,11 @@ const feedController = {
             idxRange = idxMaxRange
         }
 
-        console.log({ idxStart, order, range: idxRange })
     
         if (isRange == 'true') {
             resultFeed = await feedModel.get({ idxStart, order, range: idxRange })
         } else {
-            resultFeed = await feedModel.get({ idxStart: idx, range: 1 })
+            resultFeed = await feedModel.getFromIdx({ idx: idx })
         }
     
         if (Array.isArray(resultFeed) && resultFeed.length === 0) {
