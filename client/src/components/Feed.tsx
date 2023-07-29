@@ -4,82 +4,11 @@ import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove } from '../features/feedSlice';
 import { Link } from "react-router-dom"
+import { FeedAPI } from "../api";
 
-
-import dds from 'deventds/dist/handle'
 import SendIcon from '@mui/icons-material/Send';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import axios from "axios"
-import dayjs from 'dayjs';
-import Cookies from 'js-cookie'
 
-
-async function getFeed(feedIdx, fetchParams) {
-    let response = await axios.request({
-        method: 'get',
-        url: `/api/feeds/${feedIdx}`,
-        params: fetchParams,
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        responseType: 'json'
-    })
-
-
-    return response.data
-}
-
-async function insertFeed(content) {
-    let token = Cookies.get("user")
-
-    let response = await axios.request({
-        method: 'post',
-        url: `/api/feeds`,
-        data: {
-            content: content
-        },
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "x-access-token": token
-
-        },
-        responseType: 'json'
-    })
-
-    return response.data
-}
-
-
-async function deleteFeed(idx) {
-    let token = Cookies.get("user")
-    
-    let response = await axios.request({
-        method: 'delete',
-        url: `/api/feeds/${idx}`,
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "x-access-token": token
-
-        },
-        responseType: 'json'
-    })
-
-    return response.data
-}
-
-// async update(idx, content) {
-//     let response = await fetch("/api/feeds/"+idx, {
-//         method: "PUT",
-//         headers: {
-//             "Content-Type": "application/x-www-form-urlencoded",
-//             "x-access-token": this.token
-//         },
-//         body :`content=${content}`
-//     });
-
-//     let data = response.json();
-//     return data;
-// }
 
 function Feed() {
     const dispatch = useDispatch();
@@ -111,7 +40,7 @@ function Feed() {
     useEffect(() => {
         if (!fetchingStop) {
             const loadFeedData = async () => {
-                let getFeeds = await getFeed(fetching, {
+                let getFeeds = await FeedAPI.getFeed(fetching, {
                     isrange: 'true',
                     range: 10,
                     order: "DESC"
@@ -195,7 +124,7 @@ function FeedInput(props) {
             return 0
         }
     
-        insertFeed(input)
+        FeedAPI.insertFeed(input)
         setInput('')
 
         setTimeout(() => {
@@ -204,7 +133,7 @@ function FeedInput(props) {
     }
 
     const patchFeed = async () => {
-        const getFeeds = await getFeed(0, {
+        const getFeeds = await FeedAPI.getFeed(0, {
             isrange: 'true',
             range: 1,
             order: "DESC"
@@ -314,7 +243,7 @@ function FeedMenu({ feed }) {
     };
 
     const handleDelete = async () => {
-        const deleteThisFeed = await deleteFeed(feed.idx)
+        const deleteThisFeed = await FeedAPI.deleteFeed(feed.idx)
 
         dispatch(remove({
             idx: feed.idx

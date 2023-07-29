@@ -4,6 +4,7 @@ import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import Cookies from 'js-cookie'
 import axios from "axios"
 import { Link } from "react-router-dom"
+import { AuthAPI } from "../../api";
 
 
 function Login() {
@@ -24,20 +25,11 @@ function Login() {
     let user_pw = btoa(userPw);
         
 
-    let response = await axios.request({
-      method: 'post',
-      url: `/api/auth/login`,
-      data: {
-        user_id: user_id,
-        user_pw: user_pw
-      },
-      headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-      },
-      responseType: 'json'
-  })
+    const data = await AuthAPI.login({
+      userId: user_id,
+      userPw: user_pw
+    })
 
-    let data = response.data
 
     if (data.status == 1) {
       Cookies.set('user', data.token)

@@ -4,6 +4,7 @@ import { Button, Box, Grid, TextField, Stack, Alert } from '@mui/material';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import axios from "axios"
 import { Link } from "react-router-dom"
+import { AuthAPI } from "../../api";
 
 
 function Signup() {
@@ -49,22 +50,11 @@ function Signup() {
         return showAlert("info", "입력칸을 확인해주세요")
       }
   
-
-      let response = await axios.request({
-        method: 'post',
-        url: `/api/users`,
-        data: {
-          user_id: user_id,
-          user_pw: user_pw,
-          user_email: user_email
-        },
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        responseType: 'json'
+      const data = await AuthAPI.signup({
+        userId: user_id,
+        userPw: user_pw,
+        userEmail: user_email
       })
-    
-      let data = response.data
 
       if (data.status == 1) {
         Cookies.set('user', data.token)

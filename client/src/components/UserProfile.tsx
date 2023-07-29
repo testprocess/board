@@ -1,25 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import { Popup } from './Alert'
-import { useDispatch, useSelector } from 'react-redux';
+import { UserAPI } from "../api";
 
-import axios from "axios"
-import Cookies from 'js-cookie'
+
 import Navbar from './Navbar'
 
 
-async function getUser(userId) {    
-    let response = await axios.request({
-        method: 'get',
-        url: `/api/users/${userId}`,
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        responseType: 'json'
-    })
 
-    return response.data
-}
 
 function Profile() {
     const [userProfileId, setUserId] = useState('')
@@ -32,7 +19,7 @@ function Profile() {
             return goNotfoundPage()
         }
 
-        const response = await getUser(requestProfileId)
+        const response = await UserAPI.get(requestProfileId)
 
         if (response.status == 0) {
             return goNotfoundPage()
