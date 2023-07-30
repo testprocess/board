@@ -126,6 +126,25 @@ const UserAPI = {
         })
     
         return response.data
+    },
+
+    async update({ displayName }) {  
+        let token = Cookies.get("user")
+
+        let response = await axios.request({
+            method: 'put',
+            url: `/api/users/`,
+            data: {
+                userDisplayName: displayName
+            },
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "x-access-token": token
+            },
+            responseType: 'json'
+        })
+    
+        return response.data
     }
 }
 

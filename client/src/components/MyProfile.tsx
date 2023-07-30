@@ -11,6 +11,7 @@ import Navbar from './Navbar'
 
 
 function Profile() {
+    const [displayName, setDisplayName] = useState('')
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const userId = useSelector((state: any) => state.auth.userId);
 
@@ -23,6 +24,20 @@ function Profile() {
     const handleClickLogout = () => {
         document.cookie = 'user=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
         location.href = '/'
+    }
+
+    const handleChangeDisplayName = (e) => {
+        setDisplayName(e.target.value)
+
+    }
+    
+    const submitDisplayName = (e) => {
+        console.log(e.key)
+        if (e.key != 'Enter') {
+            return 0
+        }
+
+        UserAPI.update({ displayName: displayName })
     }
 
 
@@ -49,6 +64,8 @@ function Profile() {
                 <br />
                 <b>회원 설정</b>
                 <hr />
+
+                <TextField id="outlined-basic" label="이름 변경" variant="outlined" name="displayName" value={displayName} onKeyDown={submitDisplayName} onChange={handleChangeDisplayName} />
 
 
                 <br />
