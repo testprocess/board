@@ -9,6 +9,7 @@ const router = Router();
 router.post('/', errorHandleController(userController.create));
 router.delete('/:user_id', tokenMiddleware.check, errorHandleController(userController.delete));
 router.get('/:user_id', errorHandleController(userController.get));
+router.put('/', tokenMiddleware.check, errorHandleController(userController.update));
 
 
 export default router;

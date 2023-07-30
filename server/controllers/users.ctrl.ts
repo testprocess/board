@@ -29,7 +29,16 @@ const userController = {
             userEmail: userEmail 
         })
     
-        const isGrantAuthorization: any = await userModel.update({ userId: userId, auth: 1 });
+        const isGrantAuthorization: any =await userModel.update({ 
+            set: {
+                userAuthLevel: 1
+            },
+            where: {
+                query: 'userId = :userId',
+                data: { userId: userId }
+            }
+        });
+
         const getJwtToken = await userService.grantToken({ userId: userId });
         const createdToken = getJwtToken.userJwtToken
 
@@ -48,7 +57,15 @@ const userController = {
             return res.status(200).json({status:0})
         }
 
-        const isRevoke: any = await userModel.update({ userId: userId, auth: 0 });
+        const isRevoke: any = await userModel.update({ 
+            set: {
+                userAuthLevel: 0
+            },
+            where: {
+                query: 'userId = :userId',
+                data: { userId: userId }
+            }
+        });
 
         if (isRevoke.status == 0) {
             return res.status(200).json({status:0})
@@ -82,7 +99,39 @@ const userController = {
         } catch (error) {
             res.status(500).json({ status: 0 })
         }
-    }
+    },
+
+    update: async function (req, res) {
+        try {
+            const userId = req.auth.userId
+            const userUpdateDisplayName = req.body.userDisplayName
+
+            const userInfo = await userModel.read({ userId: userId });
+
+            if (userInfo.status <= 0) {
+                return res.status(200).json({ status: 0 })
+            }
+
+            if (userInfo.user.userAuthLevel <= 0) {
+                return res.status(200).json({ status: 0 })
+            }
+
+
+            const updateUser: any = await userModel.update({ 
+                set: {
+                    userDisplayName: userUpdateDisplayName
+                },
+                where: {
+                    query: 'userId = :userId',
+                    data: { userId: userId }
+                }
+            });
+        
+            res.status(200).json({ status: 1 })
+        } catch (error) {
+            res.status(500).json({ status: 0 })
+        }
+    },
 }
 
 

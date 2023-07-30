@@ -2,6 +2,17 @@ import { MySQLConnect, AppDataSource } from '../databases/db.js'
 
 import { User } from "../databases/entity/User.js";
 
+type updateType = {
+    set: { 
+        userAuthLevel?: number, 
+        userDisplayName?: string
+    }, 
+
+    where: { 
+        query: string, 
+        data: any
+    } 
+}
 
 const userModel = {
     create: async function ({ userId, userPasswordHash, userEmail }) {
@@ -40,21 +51,29 @@ const userModel = {
     },
 
     
-    update: async function ({ userId, auth }) {
+    update: async function ({ set: { userAuthLevel, userDisplayName }, where: { query, data } }: updateType) {
         try {
+            const paramsSetIndex = ["userAuthLevel", "userDisplayName"]
+            const paramsSetData = [userAuthLevel, userDisplayName]
+
+            let setData = {}
+
+            for (let index = 0; index < paramsSetIndex.length; index++) {
+                if (paramsSetData[index] != undefined) {
+                    setData[paramsSetIndex[index]] = paramsSetData[index]
+                }
+            }
+
+            const userRepository = AppDataSource.getRepository(User);
+            const updateUser = await userRepository
+            .createQueryBuilder()
+            .update(User)
+            .set(setData)
+            .where(query, data)
+            .execute()
     
-            let updateUser = "UPDATE users SET userAuthLevel = ? WHERE userId = ?";
-            const data = await new Promise((resolve, reject) => {
-                MySQLConnect.query(updateUser, [auth, userId], function(err, result) {
-                    if (err) {
-                        resolve({status:0})
-                    } else {
-                        resolve({status:1})
-                    }
-                });
-            })
     
-            return data
+            return updateUser
         } catch (err) {
             console.log(err)
             throw Error(err)
