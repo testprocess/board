@@ -11,6 +11,7 @@ const userModel = {
             userValues.userPassword = userPasswordHash
             userValues.userEmail = userEmail
             userValues.userAuthLevel = 1
+            userValues.userDisplayName = userId
     
             const userRepository = AppDataSource.getRepository(User);
             await userRepository.save(userValues)

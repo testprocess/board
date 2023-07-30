@@ -56,7 +56,7 @@ const userController = {
     
         res.clearCookie('user')
         res.status(200).json({status:1})
-    },
+    }, 
     
     
     get: async function (req, res) {
@@ -69,7 +69,6 @@ const userController = {
             }
     
             let result = {
-                idx: userInfo.user.idx, 
                 user_auth: userInfo.user.userAuthLevel, 
                 //user_email: userInfo.user.userEmail, 
                 user_id: userInfo.user.userId

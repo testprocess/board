@@ -197,15 +197,15 @@ function FeedProfile({ feed }) {
         <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem", alignContent: 'center' }}>
             <Grid container wrap="nowrap" spacing={2} sx={{ alignContent: 'center', alignItems: 'center' }}>
                 <Grid item>
-                    <Link to={'/user/' + feed.owner}>
-                        <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.slice(0, 1)}</Avatar>
+                    <Link to={'/user/' + feed.owner.userId}>
+                        <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.userDisplayName.slice(0, 1)}</Avatar>
 
                     </Link>
                 </Grid>
 
                 <Grid item xs zeroMinWidth sx={{ alignContent: 'center'}}>
-                <Link to={'/user/' + feed.owner}>
-                <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner}</Typography>
+                <Link to={'/user/' + feed.owner.userId}>
+                <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner.userDisplayName}</Typography>
 
                 </Link>
                     <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{new Date(dateSplit[0], dateSplit[1], dateSplit[2], dateSplit[3], dateSplit[4], dateSplit[5]).toDateString()}</Typography>
@@ -284,7 +284,7 @@ function FeedMenu({ feed }) {
 
             <MenuItem color="primary" onClick={handleShowInfo}>info</MenuItem>
 
-            {(isLogin && feed.owner == userId) ? (
+            {(isLogin && feed.owner.userId == userId) ? (
                 <MenuItem sx={{ color: "#e64840" }} onClick={handleDelete}>delete</MenuItem>
                
             ) : (
