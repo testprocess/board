@@ -1,12 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, PrimaryColumn } from "typeorm";
+import { Feed } from './Feed.js'
 
 @Entity({ name: "users" })
 export class User {
-    @PrimaryGeneratedColumn('increment')
-    idx: number;
+
+    @PrimaryColumn({ type: "varchar", length: 20 })
+    userId: string;
 
     @Column({ type: "varchar", length: 20 })
-    userId: string;
+    userDisplayName: string;
 
     @Column({ type: "varchar", length: 400 })
     userPassword: string;
@@ -16,5 +18,8 @@ export class User {
 
     @Column()
     userAuthLevel: number;
+
+    @OneToMany((type) => Feed, (feed) => feed.owner)
+    feeds: Feed[]
 
 }

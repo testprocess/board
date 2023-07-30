@@ -13,14 +13,13 @@ const feedModel = {
         try {
             
             const feedRepository = AppDataSource.getRepository(Feed);
-            const getFeed = await feedRepository.find({
-                take: range,
-                skip: idxStart, 
-
-                order: {
-                    date: order,
-                },
-            })
+            const getFeed = await feedRepository.createQueryBuilder('feed')
+            .limit(range)
+            .offset(idxStart)
+            .orderBy("feed.date", order)
+            .leftJoin("feed.owner", "user")
+            .addSelect(['user.userId', 'user.userAuthLevel', 'user.userDisplayName'])
+            .getMany()
     
             return { status: 1, result: getFeed }
 
