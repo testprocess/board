@@ -9,13 +9,6 @@ export class Feed {
     @Column({ type: "varchar", length: 1000 })
     content: string;
 
-    // @Column({ type: "varchar", length: 30 })
-    // owner: string;
-
-    // @OneToOne(() => User)
-    // @JoinColumn({ name: 'userId' })
-    // owner: User;
-
     @ManyToOne((type) => User, (user) => user.feeds)
     owner: User
 
