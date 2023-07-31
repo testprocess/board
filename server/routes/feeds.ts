@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { feedController } from '../controllers/feed.ctrl.js';
+import { feedController, feedUserController } from '../controllers/feed.ctrl.js';
 import { tokenMiddleware } from '../middlewares/token.js';
 import errorHandleController from '../middlewares/errorHandler.js'
 
@@ -11,6 +11,8 @@ router.get('/', errorHandleController(feedController.get));
 router.post('/', tokenMiddleware.check, errorHandleController(feedController.insert));
 router.delete('/:idx', tokenMiddleware.check, errorHandleController(feedController.delete));
 router.put('/:idx', tokenMiddleware.check, errorHandleController(feedController.update));
+
+router.get('/user/:userId', errorHandleController(feedUserController.get));
 
 
 export default router;

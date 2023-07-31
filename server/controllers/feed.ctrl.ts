@@ -14,6 +14,7 @@ const feedController = {
         let idx = Number(req.params.idx) || 0;
         let isRange = String(req.query.isrange) || 'false'
         let order = String(req.query.order || 'ASC')
+
         let allowOrder = ['ASC', 'DESC']
 
         let idxRange = Number(req.query.range) || 0;
@@ -35,7 +36,7 @@ const feedController = {
         if (isRange == 'true') {
             resultFeed = await feedModel.get({ idxStart, order, range: idxRange })
         } else {
-            resultFeed = await feedModel.getFromIdx({ idx: idx })
+            resultFeed = await feedModel.getBy({ idx: idx })
         }
     
         if (Array.isArray(resultFeed) && resultFeed.length === 0) {
@@ -107,4 +108,18 @@ const feedController = {
     }
 }
 
-export { feedController }
+
+const feedUserController = {
+    get: async function  (req, res) {
+        const userId = String(req.params.userId)
+        const resultFeed = await feedModel.getBy({ userId: userId })
+    
+        if (Array.isArray(resultFeed) && resultFeed.length === 0) {
+            res.status(404).json({data:'', msg:'Not Found'})
+        } else {
+            res.status(200).json({data: resultFeed})
+        }
+    },
+}
+
+export { feedController, feedUserController }
