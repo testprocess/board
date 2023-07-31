@@ -8,6 +8,11 @@ type SelectRangeType = {
     range: number
 }
 
+type SelectType = {
+    idx?: number
+    userId?: string
+}
+
 const feedModel = {
     get: async function ({ idxStart, order, range }: SelectRangeType) {
         try {
@@ -28,15 +33,39 @@ const feedModel = {
         }
     },
 
-    getFromIdx: async function ({ idx }) {
+    getBy: async function ({ idx, userId }: SelectType) {
         try {
-            
-            const feedRepository = AppDataSource.getRepository(Feed);
-            const getFeed = await feedRepository.find({
-                where: {
-                    idx: idx
+
+            const paramsWhereIndex = ["feed.idx", "user.userId"]
+            const paramsIndex = ["idx", "userId"]
+
+            const paramsData = [idx, userId]
+
+            let setData = {}
+            let where = ''
+
+            for (let index = 0; index < paramsData.length; index++) {
+                if (paramsData[index] != undefined) {
+                    setData[paramsIndex[index]] = paramsData[index]
+                    where = `${paramsWhereIndex[index]} = :${paramsIndex[index]}`
                 }
-            })
+            }
+
+            const feedRepository = AppDataSource.getRepository(Feed);
+            const getFeed = await feedRepository.createQueryBuilder('feed')
+            .orderBy("feed.date", "DESC")
+            .leftJoin("feed.owner", "user")
+            .addSelect(['user.userId', 'user.userAuthLevel', 'user.userDisplayName'])
+            .where(where, setData)
+            .getMany()
+
+            
+            // const feedRepository = AppDataSource.getRepository(Feed);
+            // const getFeed = await feedRepository.find({
+            //     where: {
+            //         ...setData
+            //     }
+            // })
     
             return { status: 1, result: getFeed }
 

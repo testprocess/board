@@ -18,6 +18,20 @@ const FeedAPI = {
     
         return response.data
     },
+
+    async getUserFeed(userId) {
+        let response = await axios.request({
+            method: 'get',
+            url: `/api/feeds/user/${userId}`,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            responseType: 'json'
+        })
+    
+    
+        return response.data
+    },
     
     async insertFeed(content) {
         let token = Cookies.get("user")

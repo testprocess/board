@@ -86,9 +86,11 @@ const userController = {
             }
     
             let result = {
-                user_auth: userInfo.user.userAuthLevel, 
+                userAuth: userInfo.user.userAuthLevel, 
                 //user_email: userInfo.user.userEmail, 
-                user_id: userInfo.user.userId
+                userId: userInfo.user.userId,
+                userDisplayName: userInfo.user.userDisplayName
+
             }
 
             if (userInfo.user.userAuthLevel <= 0) {

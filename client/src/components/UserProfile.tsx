@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import { UserAPI } from "../api";
+import { UserAPI, FeedAPI } from "../api";
+import { FeedBody } from './Feed'
 
 
 import Navbar from './Navbar'
@@ -10,6 +11,7 @@ import Navbar from './Navbar'
 
 function Profile() {
     const [userProfileId, setUserId] = useState('')
+    const [content, setContent] = useState([{idx: 0, content:'', owner: { userId: '11', userDisplayName: '11'}, date: '', type: 1}])
 
 
     const getUserData = async () => {
@@ -25,7 +27,16 @@ function Profile() {
             return goNotfoundPage()
         }
 
-        setUserId(response.data.user_id)
+        setUserId(response.data.userDisplayName)
+        getFeed(response.data.userId)
+    }
+
+    const getFeed = async (userId) => {
+        const feed = await FeedAPI.getUserFeed(userId)
+
+        console.log([feed.data.result])
+
+        setContent(feed.data.result)
     }
 
     const goNotfoundPage = () => {
@@ -49,10 +60,15 @@ function Profile() {
                     container
                     spacing={0}
                     direction="column"
-                    alignItems="center">
+                    alignItems="center"
+                    sx={{ marginBottom: '1.5rem' }}>
                     <Typography variant="h4">{userProfileId}</Typography>
 
                 </Grid>
+
+                {content.map(feed => (
+                    <FeedBody feed={feed}></FeedBody>
+                ))}
 
             </Grid>
             <Grid item xs md>
