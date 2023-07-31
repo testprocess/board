@@ -59,13 +59,6 @@ const feedModel = {
             .where(where, setData)
             .getMany()
 
-            
-            // const feedRepository = AppDataSource.getRepository(Feed);
-            // const getFeed = await feedRepository.find({
-            //     where: {
-            //         ...setData
-            //     }
-            // })
     
             return { status: 1, result: getFeed }
 

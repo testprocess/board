@@ -22,4 +22,10 @@ export class User {
     @OneToMany((type) => Feed, (feed) => feed.owner)
     feeds: Feed[]
 
+    @Column({ type: "varchar", length: 30 })
+    provider: string;
+
+    @Column({ type: 'timestamp' })
+    createAt: Date;
+
 }

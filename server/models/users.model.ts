@@ -23,6 +23,9 @@ const userModel = {
             userValues.userEmail = userEmail
             userValues.userAuthLevel = 1
             userValues.userDisplayName = userId
+            userValues.provider = 'email'
+            userValues.createAt = new Date()
+
     
             const userRepository = AppDataSource.getRepository(User);
             await userRepository.save(userValues)
