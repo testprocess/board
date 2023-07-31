@@ -1,6 +1,53 @@
 import { userService } from '../services/users.serv.js';
 import { userModel } from '../models/users.model.js';
 
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import passport from "passport";
+import oauth from '../config/oauth.js';
+import server from '../config/server.js';
+
+
+const GOOGLE_CLIENT_ID = oauth.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = oauth.GOOGLE_CLIENT_SECRET
+const URI = server[process.env.NODE_ENV].uri
+
+
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: `${URI}/api/auth/google/callback`,
+    userProfile: "https://www.googleapis.com/oauth2/userinfo"
+  },
+  async function(accessToken, refreshToken, profile, cb) {
+    console.log(accessToken, refreshToken, profile, profile.id)
+    const userId = profile.id
+
+    const getUserPasswordHash = await userService.encryptPassword(accessToken)
+    const userPasswordHash = getUserPasswordHash.userPasswordHash
+    const userEmail = profile.emails[0].value
+    const provider = 'google'
+    
+    const isDuplicate = await userModel.read({
+      userId: profile.id
+    })
+
+    if (isDuplicate.status == 0) {
+        let data = await userModel.create({
+          userId: userId,
+          userPasswordHash: userPasswordHash,
+          userEmail: userEmail,
+          provider: provider
+        })
+    }
+
+    let createdToken = await userService.grantToken(userId);
+
+    return cb(null, {
+        profile: profile,
+        token: createdToken.userJwtToken
+    });
+  }
+));
 
 const authController = {
     login: async function (req, res) {
@@ -44,4 +91,20 @@ const authController = {
     }
 }
 
-export { authController }
+
+const oauthController = {
+    authGoogle: passport.authenticate('google', { scope: ['profile', 'email'] }),
+    authGoogleCallback: passport.authenticate('google', { failureRedirect: '/auth/login', session: false }),
+    
+    callback: async function  (req, res) {
+        console.log("CONT", req.user.token)
+
+        res.cookie('user', req.user.token, { maxAge: 900000, httpOnly: false });
+
+        return res.redirect('/')
+    }
+
+}
+
+
+export { authController, oauthController }

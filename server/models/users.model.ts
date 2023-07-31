@@ -15,7 +15,7 @@ type updateType = {
 }
 
 const userModel = {
-    create: async function ({ userId, userPasswordHash, userEmail }) {
+    create: async function ({ userId, userPasswordHash, userEmail, provider }) {
         try {
             const userValues = new User()
             userValues.userId = userId
@@ -23,7 +23,7 @@ const userModel = {
             userValues.userEmail = userEmail
             userValues.userAuthLevel = 1
             userValues.userDisplayName = userId
-            userValues.provider = 'email'
+            userValues.provider = provider
             userValues.createAt = new Date()
 
     

@@ -26,7 +26,8 @@ const userController = {
         await userModel.create({ 
             userId: userId, 
             userPasswordHash: userPasswordHash, 
-            userEmail: userEmail 
+            userEmail: userEmail,
+            provider: "email"
         })
     
         const isGrantAuthorization: any =await userModel.update({ 

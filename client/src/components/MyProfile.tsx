@@ -3,6 +3,7 @@ import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Ske
 import { Popup } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { UserAPI } from "../api";
+import { Link } from "react-router-dom"
 
 import axios from "axios"
 import Cookies from 'js-cookie'
@@ -34,6 +35,9 @@ function Profile() {
             <Grid item xs={10} md={6} sx={{ marginTop: "6rem" }}>
                 <Navbar>
                     <Button onClick={handleClickLogout}>로그아웃</Button>
+                    <Link to={'/profile'}>
+                        <Button variant="text" disableElevation>프로필</Button>
+                    </Link>
 
                 </Navbar>
 

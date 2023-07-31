@@ -10,6 +10,8 @@ import { BrowserRouter } from 'react-router-dom';
 import RootPage from './pages/Root'
 import SignupPage from './pages/Signup'
 import LoginPage from './pages/Login'
+import LoginSelect from './pages/LoginSelect'
+
 import NotfoundPage from './pages/Notfound'
 import MyProfilePage from './pages/MyProfile'
 import ProfilePage from './pages/UserProfile'
@@ -44,7 +46,7 @@ const App = () => {
                             <Route path="/feed/*" component={ContentPage} />
                             <Route path="/user/*" component={ProfilePage} />
 
-                            
+                            <Route path="/auth/select" component={LoginSelect} />
                             <Route path="/auth/login" component={LoginPage} />
                             <Route path="/auth/signup" component={SignupPage} />
 
