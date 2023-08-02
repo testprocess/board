@@ -81,7 +81,7 @@ function Login() {
 
         <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
 
-          <h5 className="card-title text-center mb-5 fw-light fs-5">로그인</h5>
+          <h3>로그인</h3>
 
           <Stack spacing={2} sx={{ marginBottom: '1rem' }}>
             <TextField type="text" label="Id" variant="outlined" placeholder="User ID" name="userId" onChange={onChange} value={userId} required autoFocus />

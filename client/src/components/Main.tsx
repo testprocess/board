@@ -70,10 +70,7 @@ function ButtonBox({ isLogin }) {
 
     return (
         <Box sx={{ justifyContent: 'center' }}>
-            <Link to={'/auth/signup'}>
-                <Button sx={{ marginRight: '0.2rem' }} variant="text" disableElevation>가입 </Button>
-            </Link>
-            <Link to={'/auth/login'}>
+            <Link to={'/auth/select'}>
                 <Button variant="text" disableElevation>로그인 </Button>
             </Link>
         </Box>

@@ -9,7 +9,10 @@
     "start": "NODE_ENV=production node app.js",
     "start:dev": "JWT_SECRET=dfwcrq3rqrq NODE_ENV=development node app.js",
     "start:dev:w": "JWT_SECRET=dfwcrq3rqrq NODE_ENV=development nodemon app.js",
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
     "bundle": "webpack -w --mode=development",
     "bundle:prod": "webpack --mode=production",
     "compile": "tsc -w",
@@ -48,6 +51,8 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.1",

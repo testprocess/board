@@ -9,6 +9,7 @@ export class Feed {
     @Column({ type: "varchar", length: 1000 })
     content: string;
 
+<<<<<<< HEAD
     // @Column({ type: "varchar", length: 30 })
     // owner: string;
 
@@ -16,6 +17,8 @@ export class Feed {
     // @JoinColumn({ name: 'userId' })
     // owner: User;
 
+=======
+>>>>>>> develop
     @ManyToOne((type) => User, (user) => user.feeds)
     owner: User
 

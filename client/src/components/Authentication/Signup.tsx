@@ -184,7 +184,7 @@ function Signup() {
 
         <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
 
-          <h5 className="card-title text-center mb-5 fw-light fs-5">회원가입</h5>
+          <h3>회원가입</h3>
 
           <Stack spacing={2} sx={{ marginBottom: '1rem' }}>
             <TextField type="text" label="Id" variant="outlined" name="userId" error={!inputsVaild['userId'].isVaild} helperText={inputsVaild['userId'].message} ref={userIdRef} onChange={onChange} value={userId} required autoFocus />

@@ -15,7 +15,7 @@ type updateType = {
 }
 
 const userModel = {
-    create: async function ({ userId, userPasswordHash, userEmail }) {
+    create: async function ({ userId, userPasswordHash, userEmail, provider }) {
         try {
             const userValues = new User()
             userValues.userId = userId
@@ -23,6 +23,12 @@ const userModel = {
             userValues.userEmail = userEmail
             userValues.userAuthLevel = 1
             userValues.userDisplayName = userId
+<<<<<<< HEAD
+=======
+            userValues.provider = provider
+            userValues.createAt = new Date()
+
+>>>>>>> develop
     
             const userRepository = AppDataSource.getRepository(User);
             await userRepository.save(userValues)
