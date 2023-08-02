@@ -11,4 +11,9 @@ router.get('/me', tokenMiddleware.check, errorHandleController(authController.me
 router.get('/google', oauthController.authGoogle);
 router.get('/google/callback', oauthController.authGoogleCallback, oauthController.callback);
 
+
+
+router.get('/oauth/isEnable', oauthController.isEnable);
+
+
 export default router;

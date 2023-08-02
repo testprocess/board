@@ -1,5 +1,8 @@
 export default 
 {
-    "GOOGLE_CLIENT_ID": "",
-    "GOOGLE_CLIENT_SECRET": ""
+    "GOOGLE": {
+        "GOOGLE_CLIENT_ID": "a",
+        "GOOGLE_CLIENT_SECRET": "a",
+        "IS_ENABLE": true
+    }
 }

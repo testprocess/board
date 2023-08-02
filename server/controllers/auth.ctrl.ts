@@ -7,8 +7,10 @@ import oauth from '../config/oauth.js';
 import server from '../config/server.js';
 
 
-const GOOGLE_CLIENT_ID = oauth.GOOGLE_CLIENT_ID
-const GOOGLE_CLIENT_SECRET = oauth.GOOGLE_CLIENT_SECRET
+const GOOGLE_CLIENT_ID = oauth["GOOGLE"].GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = oauth["GOOGLE"].GOOGLE_CLIENT_SECRET
+const GOOGLE_IS_ENABLE = oauth["GOOGLE"].IS_ENABLE
+
 const URI = server[process.env.NODE_ENV].uri
 
 
@@ -95,6 +97,14 @@ const authController = {
 const oauthController = {
     authGoogle: passport.authenticate('google', { scope: ['profile', 'email'] }),
     authGoogleCallback: passport.authenticate('google', { failureRedirect: '/auth/login', session: false }),
+
+    isEnable: async function  (req, res) {
+        return res.send({
+            isEnable: {
+                google: GOOGLE_IS_ENABLE
+            }
+        })
+    },
     
     callback: async function  (req, res) {
         console.log("CONT", req.user.token)

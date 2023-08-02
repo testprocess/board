@@ -162,4 +162,20 @@ const UserAPI = {
     }
 }
 
-export { FeedAPI, AuthAPI, UserAPI }
+const OauthAPI = {
+    async isEnable() {
+        
+      let response = await axios.request({
+        method: 'get',
+        url: `/api/auth/oauth/isEnable`,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        responseType: 'json'
+      })
+    
+      return response.data
+    }
+}
+
+export { FeedAPI, AuthAPI, UserAPI, OauthAPI }
