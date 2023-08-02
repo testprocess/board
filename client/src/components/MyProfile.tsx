@@ -36,22 +36,6 @@ function Profile() {
         location.href = '/'
     }
 
-<<<<<<< HEAD
-    const handleChangeDisplayName = (e) => {
-        setDisplayName(e.target.value)
-
-    }
-    
-    const submitDisplayName = (e) => {
-        console.log(e.key)
-        if (e.key != 'Enter') {
-            return 0
-        }
-
-        UserAPI.update({ displayName: displayName })
-    }
-=======
->>>>>>> develop
 
 
     return (
