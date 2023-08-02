@@ -3,10 +3,7 @@ import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Ske
 import { Popup } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { UserAPI } from "../api";
-<<<<<<< HEAD
-=======
 import { Link } from "react-router-dom"
->>>>>>> develop
 
 import axios from "axios"
 import Cookies from 'js-cookie'
@@ -14,15 +11,8 @@ import Navbar from './Navbar'
 import EditIcon from '@mui/icons-material/Edit';
 
 
-<<<<<<< HEAD
-
-function Profile() {
-    const [displayName, setDisplayName] = useState('')
-    const isLogin = useSelector((state: any) => state.auth.isLogin);
-=======
 function Profile() {
 
->>>>>>> develop
     const userId = useSelector((state: any) => state.auth.userId);
 
     const handleWithdrawal = () => {
@@ -58,12 +48,6 @@ function Profile() {
                 <b>회원 설정</b>
                 <hr />
 
-<<<<<<< HEAD
-                <TextField id="outlined-basic" label="이름 변경" variant="outlined" name="displayName" value={displayName} onKeyDown={submitDisplayName} onChange={handleChangeDisplayName} />
-
-
-=======
->>>>>>> develop
                 <br />
 
                 <Button sx={{ color: "#d12828" }} onClick={handleWithdrawal}>회원탈퇴</Button>

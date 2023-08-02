@@ -162,9 +162,6 @@ const UserAPI = {
     }
 }
 
-<<<<<<< HEAD
-export { FeedAPI, AuthAPI, UserAPI }
-=======
 const OauthAPI = {
     async isEnable() {
         
@@ -182,4 +179,3 @@ const OauthAPI = {
 }
 
 export { FeedAPI, AuthAPI, UserAPI, OauthAPI }
->>>>>>> develop
