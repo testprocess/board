@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem, InputAdornment } from '@mui/material';
 import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
-import { push, unshift, remove } from '../features/feedSlice';
+import { push, unshift, remove, clear } from '../features/feedSlice';
 import { Link } from "react-router-dom"
 import { FeedAPI } from "../api";
 
@@ -35,6 +35,11 @@ function Feed() {
             }, 1000);
         }
     }
+
+    useEffect(() => {
+        dispatch(clear({}))
+
+    }, [])
     
 
     useEffect(() => {

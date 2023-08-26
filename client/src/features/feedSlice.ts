@@ -27,6 +27,9 @@ const feedSlice = createSlice({
         unshift(state, action) {
             state.feeds.unshift(action.payload)
         },
+        clear(state, action) {
+            state.feeds = [{idx: 0, content:'', owner: '', date: '', type: 0}]
+        },
         remove(state, action) {
             const feedWithIdx = state.feeds.findIndex((obj) => obj.idx === action.payload.idx);
           
@@ -37,5 +40,5 @@ const feedSlice = createSlice({
     }
 })
 
-export const { push, unshift, remove } = feedSlice.actions
+export const { push, unshift, clear, remove } = feedSlice.actions
 export default feedSlice.reducer
