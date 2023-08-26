@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,6 +22,7 @@ import './App.css'
 
 const App = () => {
     const isDarkmode = useSelector((state: any) => state.app.isDarkmode);
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
 
     const darkTheme = createTheme({
         palette: {
@@ -41,7 +42,14 @@ const App = () => {
                     <BrowserRouter>
                         <Switch>
                             <Route exact path="/" component={RootPage} />
-                            <Route path="/profile" component={MyProfilePage} />
+
+
+                            <Route
+                                path="/profile"
+                                render={() => (isLogin ? <MyProfilePage />  : <Redirect to={"/auth/select"} />)}
+                            />
+                            
+
 
                             <Route path="/feed/*" component={ContentPage} />
                             <Route path="/user/*" component={ProfilePage} />
