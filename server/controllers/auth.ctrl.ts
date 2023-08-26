@@ -64,11 +64,11 @@ const authController = {
             })
 
             if (userInfo.user.userAuthLevel == 0) {
-                return res.status(401).json({status: -1})
+                return res.status(200).json({status: -1})
             }
 
             if (result.status == 0) {
-                return res.status(401).json({status: -1})
+                return res.status(200).json({status: -1})
             }
 
             const getJwtToken = await userService.grantToken({ userId: userId });
@@ -81,7 +81,7 @@ const authController = {
             res.status(200).json({status:1, token: createdToken})
 
         } catch (error) {
-            res.status(401).json({status:0})
+            res.status(200).json({status:0})
         }
     },
 
