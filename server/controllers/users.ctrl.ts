@@ -1,7 +1,7 @@
 
 import { userService } from '../services/users.serv.js';
-
 import { userModel } from '../models/users.model.js';
+
 
 const userController = {
     create: async function  (req, res) {
