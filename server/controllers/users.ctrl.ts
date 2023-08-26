@@ -1,7 +1,7 @@
 
 import { userService } from '../services/users.serv.js';
-
 import { userModel } from '../models/users.model.js';
+
 
 const userController = {
     create: async function  (req, res) {
@@ -44,7 +44,7 @@ const userController = {
         const createdToken = getJwtToken.userJwtToken
 
         if (isGrantAuthorization.status == 0) {
-            return res.status(401).json({status:0})
+            return res.status(200).json({status:0})
         }
 
         res.status(200).json({status:1, token: createdToken})

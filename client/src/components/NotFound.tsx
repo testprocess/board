@@ -36,7 +36,7 @@ function NotFound() {
       <Box sx={{ justifyContent: 'center', textAlign: 'center' }}>
         <ThemeProvider theme={theme}>
           <Typography variant="h3" sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>오 이게 무슨일이죠..?</Typography>
-          <Typography variant="h6"sx={{ marginBottom: '1.7rem', color: 'text.secondary' }} >페이지를 표시하지 못했어요ㅠㅠ </Typography>
+          <Typography variant="h6"sx={{ marginBottom: '1.7rem' }} >페이지를 표시하지 못했어요ㅠㅠ </Typography>
         </ThemeProvider>
 
 

@@ -34,23 +34,26 @@ function Profile() {
             </Grid>
             <Grid item xs={10} md={6} sx={{ marginTop: "6rem" }}>
                 <Navbar>
-                    <Button onClick={handleClickLogout}>로그아웃</Button>
                     <Link to={'/profile'}>
                         <Button variant="text" disableElevation>프로필</Button>
                     </Link>
-
                 </Navbar>
 
                 <ProfileDisplayName></ProfileDisplayName>
 
 
-                <br />
-                <b>회원 설정</b>
-                <hr />
+                <Box sx={{ marginTop: '2rem' }}>
+                    <b>앱 설정</b>
+                    <hr />
+                    <Button onClick={handleClickLogout}>로그아웃</Button>
+                </Box>
 
-                <br />
+                <Box sx={{ marginTop: '2rem' }}>
+                    <b>회원 설정</b>
+                    <hr />
+                    <Button sx={{ color: "#d12828" }} onClick={handleWithdrawal}>회원탈퇴</Button>
+                </Box>
 
-                <Button sx={{ color: "#d12828" }} onClick={handleWithdrawal}>회원탈퇴</Button>
 
             </Grid>
             <Grid item xs md>
