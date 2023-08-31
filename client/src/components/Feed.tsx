@@ -180,7 +180,8 @@ function FeedBody({ feed }) {
         )
     }
 
-    const lineNumbers = feed.content.split(/\r\n|\r|\n/).length + Math.ceil(feed.content.length / 60)
+    const [lineNumbers, setLineNumbers] = useState(feed.content.split(/\r\n|\r|\n/).length + Math.ceil(feed.content.length / 60))
+
 
     const splitLines = () => {
         const lines = feed.content.split(/\r\n|\r|\n/).map((c) => { 
@@ -190,7 +191,6 @@ function FeedBody({ feed }) {
         
 
         const linesArray = lines.map((c) => {
-            console.log(c)
             return Array.isArray(c) ? c.join('') : c[0]
         })
 

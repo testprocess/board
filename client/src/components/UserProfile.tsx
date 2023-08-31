@@ -11,7 +11,7 @@ import Navbar from './Navbar'
 
 function Profile() {
     const [userProfileId, setUserId] = useState('')
-    const [content, setContent] = useState([{idx: 0, content:'', owner: { userId: '11', userDisplayName: '11'}, date: '', type: 1}])
+    const [content, setContent] = useState([{idx: 0, content:' ', owner: { userId: '11', userDisplayName: '11'}, date: '', type: 0}])
 
 
     const getUserData = async () => {
@@ -33,8 +33,6 @@ function Profile() {
 
     const getFeed = async (userId) => {
         const feed = await FeedAPI.getUserFeed(userId)
-
-        console.log([feed.data.result])
 
         setContent(feed.data.result)
     }

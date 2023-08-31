@@ -4,7 +4,10 @@ import { createSlice } from '@reduxjs/toolkit'
 type FeedObject = {
     idx: number
     content: string
-    owner: string
+    owner: {
+        userId: string
+        userDisplayName: string
+    }
     date: string
     type: number
 }
@@ -14,7 +17,7 @@ type state = {
 }
 
 const initialState: state = {
-    feeds: [{idx: 0, content:'', owner: '', date: '', type: 0}]
+    feeds: [{idx: 0, content: '.', owner: { userId: '', userDisplayName: ''}, date: '', type: 0}]
 }
 
 const feedSlice = createSlice({
@@ -28,7 +31,7 @@ const feedSlice = createSlice({
             state.feeds.unshift(action.payload)
         },
         clear(state, action) {
-            state.feeds = [{idx: 0, content:'', owner: '', date: '', type: 0}]
+            state.feeds = [{idx: 0, content:'', owner: { userId: '', userDisplayName: ''}, date: '', type: 0}]
         },
         remove(state, action) {
             const feedWithIdx = state.feeds.findIndex((obj) => obj.idx === action.payload.idx);
