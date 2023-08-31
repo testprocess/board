@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem, InputAdornment } from '@mui/material';
 import { Popup, AlertDialog } from './Alert'
 import { useDispatch, useSelector } from 'react-redux';
-import { push, unshift, remove } from '../features/feedSlice';
+import { push, unshift, remove, clear } from '../features/feedSlice';
 import { Link } from "react-router-dom"
 import { FeedAPI } from "../api";
 
@@ -35,6 +35,11 @@ function Feed() {
             }, 1000);
         }
     }
+
+    useEffect(() => {
+        dispatch(clear({}))
+
+    }, [])
     
 
     useEffect(() => {
@@ -175,16 +180,71 @@ function FeedBody({ feed }) {
         )
     }
 
+    const [lineNumbers, setLineNumbers] = useState(feed.content.split(/\r\n|\r|\n/).length + Math.ceil(feed.content.length / 60))
+
+
+    const splitLines = () => {
+        const lines = feed.content.split(/\r\n|\r|\n/).map((c) => { 
+            let content = c.match(/.{1,60}/g)
+            return content == null ? '' : content
+        })
+        
+
+        const linesArray = lines.map((c) => {
+            return Array.isArray(c) ? c.join('') : c[0]
+        })
+
+        return linesArray
+    }
+
+    const splitContent = () => {
+        const lines = splitLines().slice(0, 30).join('\n')
+        return lines
+    }
+
     return (
         <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
             <CardContent>
                 <FeedProfile feed={feed}></FeedProfile>
 
                 <Box sx={{ fontSize: 14, whiteSpace: 'pre-line', wordWrap: 'break-word' }} color="text.secondary">
-                    {feed.content}
+                    {lineNumbers < 30 ? (
+                        <FeedContent isMore={false} feed={feed}>{feed.content}</FeedContent>
+                    ) : (
+                        <FeedContent isMore={true} feed={feed}>{splitContent()}...</FeedContent>
+                    )}
+                    
                 </Box>
             </CardContent>
         </Card>
+    )
+}
+
+
+function FeedContent({ isMore, feed, children }) {
+    const [content, setContent] = useState(children)
+    const [isClickMoreButton, setIsClick] = useState(false)
+
+    const showMore = () => {
+        setContent(feed.content)
+        setIsClick(true)
+    }
+
+    if (isMore) {
+        return (
+            <Box onClick={showMore} sx={{ cursor: isClickMoreButton ? '' : 'pointer' }}>
+                {content}
+                {isClickMoreButton ? (
+                    <></>
+                ) : (
+                    <b>(더보기)</b>
+                )}
+            </Box>
+        )
+    }
+
+    return (
+        <>{content}</>
     )
 }
 
