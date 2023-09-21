@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Box, Grid } from '@mui/material';
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
 
-import Navbar from './Navbar'
+import Navbar from './common/Navbar'
 
 function Main() {
     const isLogin = useSelector((state: any) => state.auth.isLogin);
@@ -40,22 +39,6 @@ function Main() {
 
 
 function ButtonBox({ isLogin }) {
-    const handleClickSignup = () => {
-        location.href = '/auth/signup'
-    }
-
-    const handleClickLogin = () => {
-        location.href = '/auth/login'
-    }
-
-    const handleClickLogout = () => {
-        document.cookie = 'user=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
-        location.href = '/'
-    }
-
-    const handleClickProfile = () => {
-        location.href = '/profile'
-    }
 
     if (isLogin) {
         return (

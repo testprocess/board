@@ -4,7 +4,7 @@ import { UserAPI, FeedAPI } from "../api";
 import { FeedBody } from './Feed'
 
 
-import Navbar from './Navbar'
+import Navbar from './common/Navbar'
 
 
 

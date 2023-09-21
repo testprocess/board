@@ -1,5 +1,5 @@
 import React from "react";
-import LoginSelect from "../components/Authentication/LoginSelect"
+import LoginSelect from "../components/authentication/LoginSelect"
 
 
 function LoginSelectPage() {
