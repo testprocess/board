@@ -52,7 +52,7 @@ const App = () => {
 
 
                             <Route path="/feed/*" component={ContentPage} />
-                            <Route path="/user/*" component={ProfilePage} />
+                            <Route path="/@*" component={ProfilePage} />
 
                             <Route path="/auth/select" component={LoginSelect} />
                             <Route path="/auth/login" component={LoginPage} />

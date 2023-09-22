@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import { Popup } from './Alert'
+import { Popup } from './common/Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { UserAPI } from "../api";
 import { Link } from "react-router-dom"
 
 import axios from "axios"
 import Cookies from 'js-cookie'
-import Navbar from './Navbar'
+import Navbar from './common/Navbar'
 import EditIcon from '@mui/icons-material/Edit';
 
 

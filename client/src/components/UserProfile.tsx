@@ -4,7 +4,7 @@ import { UserAPI, FeedAPI } from "../api";
 import { FeedBody } from './Feed'
 
 
-import Navbar from './Navbar'
+import Navbar from './common/Navbar'
 
 
 
@@ -15,7 +15,7 @@ function Profile() {
 
 
     const getUserData = async () => {
-        const requestProfileId = location.pathname.split('/')[2]
+        const requestProfileId = location.pathname.split('@')[1]
 
         if (requestProfileId === '') {
             return goNotfoundPage()

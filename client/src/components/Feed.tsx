@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem, InputAdornment } from '@mui/material';
-import { Popup, AlertDialog } from './Alert'
+import { Popup, AlertDialog } from './common/Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { push, unshift, remove, clear } from '../features/feedSlice';
 import { Link } from "react-router-dom"
@@ -113,7 +113,7 @@ function FeedInput(props) {
     const feeds = useSelector((state: any) => state.feed.feeds);
 
     const [input, setInput] = useState('')
-    const [alertTrigger, setAlertTrigger] = useState(0)
+    const [isAlertOpen, setAlertOpen] = useState(false)
 
     const handleChange = (e) => {
         setInput(e.target.value)
@@ -121,7 +121,10 @@ function FeedInput(props) {
 
     const handleClick = () => {
         if (input.length > 1000) {
-            setAlertTrigger(alertTrigger + 1)
+            setAlertOpen(true)
+            setTimeout(() => {
+                setAlertOpen(false)
+            }, 100)
             return 0
         }
 
@@ -166,7 +169,7 @@ function FeedInput(props) {
             />
             <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "text.primary" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
-            <Popup trigger={alertTrigger} message="길이가 너무 길어요" severity="info"></Popup>
+            <Popup isOpen={isAlertOpen} message="길이가 너무 길어요" severity="info"></Popup>
 
         </Stack>
     );
@@ -188,7 +191,6 @@ function FeedBody({ feed }) {
             let content = c.match(/.{1,60}/g)
             return content == null ? '' : content
         })
-        
 
         const linesArray = lines.map((c) => {
             return Array.isArray(c) ? c.join('') : c[0]
@@ -257,14 +259,14 @@ function FeedProfile({ feed }) {
         <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem", alignContent: 'center' }}>
             <Grid container wrap="nowrap" spacing={2} sx={{ alignContent: 'center', alignItems: 'center' }}>
                 <Grid item>
-                    <Link to={'/user/' + feed.owner.userId}>
+                    <Link to={'/@' + feed.owner.userId}>
                         <Avatar sx={{ width: '2rem', height: '2rem', fontSize: '1rem' }}>{feed.owner.userDisplayName.slice(0, 1)}</Avatar>
 
                     </Link>
                 </Grid>
 
                 <Grid item xs zeroMinWidth sx={{ alignContent: 'center'}}>
-                <Link to={'/user/' + feed.owner.userId}>
+                <Link to={'/@' + feed.owner.userId}>
                 <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner.userDisplayName}</Typography>
 
                 </Link>
@@ -286,7 +288,7 @@ function FeedMenu({ feed }) {
     const dispatch = useDispatch();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [alertTrigger, setAlertTrigger] = useState(0)
+    const [isPopupOpen, setPopupOpen] = useState(false)
     const [alertDialogTrigger, setAlertDialogTrigger] = useState(0)
 
     const isLogin = useSelector((state: any) => state.auth.isLogin);
@@ -310,7 +312,10 @@ function FeedMenu({ feed }) {
         }))
 
         if (deleteThisFeed.status == 1) {
-            setAlertTrigger(alertTrigger + 1)
+            setPopupOpen(true)
+            setTimeout(() => {
+                setPopupOpen(false)
+            }, 100)
         }
 
         handleClose()
@@ -352,7 +357,7 @@ function FeedMenu({ feed }) {
             )}
         </Menu>
 
-        <Popup trigger={alertTrigger} message="삭제 완료" severity="success"></Popup>
+        <Popup isOpen={isPopupOpen} message="삭제 완료" severity="success"></Popup>
 
         <AlertDialog trigger={alertDialogTrigger} title="피드 정보">
             <p>{feed.date}</p>

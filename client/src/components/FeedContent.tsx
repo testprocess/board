@@ -1,16 +1,16 @@
 
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Stack, Grid, Card, CardContent, Typography, Box, Skeleton, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import { Popup } from './Alert'
+import { Popup } from './common/Alert'
 import { FeedBody } from './Feed'
 import { useDispatch, useSelector } from 'react-redux';
 import { FeedAPI } from "../api";
 
-import Navbar from './Navbar'
+import Navbar from './common/Navbar'
 
 
 function FeedContent() {
-    const [content, setContent] = useState([{idx: 0, content:'', owner: { userId: 'none', userDisplayName: 'none'}, date: '', type: 1}])
+    const [content, setContent] = useState([{idx: 0, content:' ', owner: { userId: ' ', userDisplayName: ' '}, date: '', type: 0}])
 
     const fetchFeed = async () => {
         const feedIdx = Number(location.pathname.split('/')[2])
