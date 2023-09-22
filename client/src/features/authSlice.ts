@@ -8,8 +8,8 @@ type state = {
 }
 
 const checkLogin = () => {
-    let token = Cookies.get("user")
     try {
+        let token = Cookies.get("user")
         let decoded = JSON.parse(atob(token.split('.')[1]));
         return {
             isVaild: 1,

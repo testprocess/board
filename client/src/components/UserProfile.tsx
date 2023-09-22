@@ -4,12 +4,15 @@ import { UserAPI, FeedAPI } from "../api";
 import { FeedBody } from './Feed'
 
 
-import Navbar from './common/Navbar'
+import Navbar, { ButtonBox } from './common/Navbar'
+import { useSelector } from "react-redux";
 
 
 
 
 function Profile() {
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
+
     const [userProfileId, setUserId] = useState('')
     const [content, setContent] = useState([{idx: 0, content:' ', owner: { userId: '11', userDisplayName: '11'}, date: '', type: 0}])
 
@@ -46,32 +49,29 @@ function Profile() {
     }, [])
 
 
-    return (
-        <Grid container spacing={3}>
-            <Grid item xs md>
-            </Grid>
-            <Grid item xs={10} md={6} sx={{ marginTop: "6rem" }}>
-                <Navbar></Navbar>
 
-                
+    return (
+        <Grid container sx={{ marginTop: "4rem" }} justifyContent="center" spacing={3}>
+        <Navbar>
+            <ButtonBox isLogin={isLogin}></ButtonBox>
+        </Navbar>
+
+        <Grid item xs={12} md={6}>
                 <Grid
                     container
                     spacing={0}
                     direction="column"
                     alignItems="center"
-                    sx={{ marginBottom: '1.5rem' }}>
+                    sx={{ marginBottom: '2rem' }}>
                     <Typography variant="h4">{userProfileId}</Typography>
-
                 </Grid>
 
                 {content.map(feed => (
                     <FeedBody feed={feed}></FeedBody>
                 ))}
-
-            </Grid>
-            <Grid item xs md>
-            </Grid>
         </Grid>
+    </Grid>
+
     );
 
 }

@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleDarkmode } from '../../features/appSlice';
 import { Link } from "react-router-dom"
-
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 
 function Navbar({ children }: any) {
@@ -15,11 +11,7 @@ function Navbar({ children }: any) {
   const colorMode = isDarkmode == false ? 'rgba(255,255,255,0.7)' : 'rgba(18, 18, 18,0.7)'
   const blurBackground = { backdropFilter: "blur(8px)", backgroundColor: colorMode, boxShadow: "none", backgroundImage: "none" }
 
-  const toggleColorMode = () => {
-    dispatch(toggleDarkmode({
-      isDarkmode: isDarkmode == false ? true : false
-    }))
-  }
+
 
   return (
     <Box sx={{ flexGrow: 1, width: '100%' }} >
@@ -32,14 +24,34 @@ function Navbar({ children }: any) {
           </Typography>
           {children}
 
-          <IconButton sx={{ ml: 1}} onClick={toggleColorMode} color="primary">
-            {isDarkmode === true ? <Brightness7Icon sx={{ fontSize: "1.2rem"  }} /> : <Brightness4Icon sx={{ fontSize: "1.2rem"  }} />}
-          </IconButton>
         </Toolbar>
       </AppBar>
     </Box>
   );
 }
 
+function ButtonBox({ isLogin }) {
+  if (isLogin) {
+    return (
+      <Box sx={{ justifyContent: 'center' }}>
+        <Link to={'/profile'}>
+          <Button variant="text" disableElevation>프로필</Button>
+        </Link>
+      </Box>
+    );
+  }
 
-export default Navbar;
+  return (
+    <Box sx={{ justifyContent: 'center' }}>
+      <Link to={'/auth/select'}>
+        <Button variant="text" disableElevation>로그인 </Button>
+      </Link>
+    </Box>
+
+  );
+}
+
+
+
+export default Navbar
+export { ButtonBox }
