@@ -42,17 +42,15 @@ function Profile() {
                 <ProfileDisplayName></ProfileDisplayName>
 
 
-                <Box sx={{ marginTop: '2rem' }}>
-                    <b>앱 설정</b>
-                    <hr />
+                <ProfileBox title="앱 설정">
                     <Button onClick={handleClickLogout}>로그아웃</Button>
-                </Box>
+                </ProfileBox>
 
-                <Box sx={{ marginTop: '2rem' }}>
-                    <b>회원 설정</b>
-                    <hr />
+
+                <ProfileBox title="회원 설정">
                     <Button sx={{ color: "#d12828" }} onClick={handleWithdrawal}>회원탈퇴</Button>
-                </Box>
+                </ProfileBox>
+
 
 
             </Grid>
@@ -64,6 +62,17 @@ function Profile() {
 }
 
 
+function ProfileBox({ title, children }: any) {
+    return (
+        <Box sx={{ marginTop: '2rem' }}>
+            <b>{title}</b>
+            <hr />
+            {children}
+        </Box>
+    )
+}
+
+
 function ProfileDisplayName() {
     const [displayName, setDisplayName] = useState('')
     const [isEditUserName, setEditUserName] = useState(false)
@@ -71,9 +80,6 @@ function ProfileDisplayName() {
     const isLogin = useSelector((state: any) => state.auth.isLogin);
     const userId = useSelector((state: any) => state.auth.userId);
 
-    useEffect(() => {
-        getDisplayName()
-    }, [])
 
     const handleChangeDisplayName = (e) => {
         setDisplayName(e.target.value)
@@ -104,30 +110,30 @@ function ProfileDisplayName() {
         setDisplayName( userData.data.userDisplayName)
     }
 
+    useEffect(() => {
+        getDisplayName()
+    }, [])
 
     return (
         <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center">
-        <Typography sx={{ display: isEditUserName == true ? "none" : "block" }} variant="h4">{displayName}</Typography>
-        <TextField 
-            sx={{ display: isEditUserName == true ? "block" : "none" }} 
-            id="outlined-basic" 
-            label="이름 변경" 
-            variant="outlined" 
-            name="displayName"  
-            value={displayName} 
-            onKeyDown={handleSubmitDisplayName}
-            onChange={handleChangeDisplayName}
-            InputProps={{endAdornment: <Button onClick={sendDisplayName}><EditIcon /></Button>}}
-        />
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center">
+            <Typography sx={{ display: isEditUserName == true ? "none" : "block" }} variant="h4">{displayName}</Typography>
+            <TextField 
+                sx={{ display: isEditUserName == true ? "block" : "none" }} 
+                id="outlined-basic" 
+                label="이름 변경" 
+                variant="outlined" 
+                name="displayName"  
+                value={displayName} 
+                onKeyDown={handleSubmitDisplayName}
+                onChange={handleChangeDisplayName}
+                InputProps={{endAdornment: <Button onClick={sendDisplayName}><EditIcon /></Button>}}
+            />
 
-        <Button sx={{ display: isEditUserName == true ? "none" : "block" }}  onClick={handleClickEditButton}><EditIcon /></Button>
-
-        
-
+            <Button sx={{ display: isEditUserName == true ? "none" : "block" }}  onClick={handleClickEditButton}><EditIcon /></Button>
         </Grid>
     )
 }
