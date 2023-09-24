@@ -36,38 +36,40 @@ function Feed() {
         }
     }
 
+    const loadFeedData = async () => {
+        let getFeeds = await FeedAPI.getFeed(fetching, {
+            isrange: 'true',
+            range: 10,
+            order: "DESC"
+        })
+
+        if (getFeeds.data.result.length == 0) {
+            setFetchingStop(true)
+        }
+
+        for (let index = 0; index < getFeeds.data.result.length; index++) {
+            const element = getFeeds.data.result[index];
+
+            dispatch(push({
+                idx: element.idx, 
+                content: element.content, 
+                owner: element.owner, 
+                date: element.date, 
+                type: element.type, 
+            }))
+        }
+    };
+
     useEffect(() => {
         dispatch(clear({}))
 
     }, [])
+
     
 
     useEffect(() => {
         if (!fetchingStop) {
-            const loadFeedData = async () => {
-                let getFeeds = await FeedAPI.getFeed(fetching, {
-                    isrange: 'true',
-                    range: 10,
-                    order: "DESC"
-                })
-    
-                if (getFeeds.data.result.length == 0) {
-                    setFetchingStop(true)
-                }
-
-                for (let index = 0; index < getFeeds.data.result.length; index++) {
-                    const element = getFeeds.data.result[index];
-    
-                    dispatch(push({
-                        idx: element.idx, 
-                        content: element.content, 
-                        owner: element.owner, 
-                        date: element.date, 
-                        type: element.type, 
-                    }))
-                }
-            };
-    
+            dispatch(clear({}))
             loadFeedData()  
         }
     }, [fetching])
@@ -75,16 +77,18 @@ function Feed() {
 
     document.addEventListener('scroll', handleScroll)
 
+    const feedsResult = feeds.map(feed => (
+        <FeedBody feed={feed}></FeedBody>
+
+    ))
+
     if (isLogin) {
         return (
             <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
                 <Grid item xs={12} md={6}>
                     <FeedInput></FeedInput>
 
-                    {feeds.map(feed => (
-                        <FeedBody feed={feed}></FeedBody>
-    
-                    ))}
+                    {feedsResult}
                     <FeedSkeleton></FeedSkeleton>
                 </Grid>
             </Grid>
@@ -94,10 +98,7 @@ function Feed() {
     return (
         <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
             <Grid item xs={12} md={6}>
-                {feeds.map(feed => (
-                    <FeedBody feed={feed}></FeedBody>
-
-                ))}
+                {feedsResult}
                 <FeedSkeleton></FeedSkeleton>
             </Grid>
         </Grid>
@@ -114,6 +115,8 @@ function FeedInput(props) {
 
     const [input, setInput] = useState('')
     const [isAlertOpen, setAlertOpen] = useState(false)
+    const [isAlertOpenSuccess, setAlertOpenSuccess] = useState(false)
+
 
     const handleChange = (e) => {
         setInput(e.target.value)
@@ -135,8 +138,15 @@ function FeedInput(props) {
         FeedAPI.insertFeed(input)
         setInput('')
 
+        setAlertOpenSuccess(true)
+        setTimeout(() => {
+            setAlertOpenSuccess(false)
+        }, 100)
+        
+
         setTimeout(() => {
             patchFeed()
+
         }, 500)
     }
 
@@ -147,6 +157,7 @@ function FeedInput(props) {
             order: "DESC"
         })
 
+
         dispatch(unshift({
             idx: getFeeds.data.result[0].idx, 
             content: getFeeds.data.result[0].content, 
@@ -154,6 +165,7 @@ function FeedInput(props) {
             date: getFeeds.data.result[0].date, 
             type: getFeeds.data.result[0].type 
         }))
+
     }
     
 
@@ -170,6 +182,7 @@ function FeedInput(props) {
             <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "text.primary" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup isOpen={isAlertOpen} message="길이가 너무 길어요" severity="info"></Popup>
+            <Popup isOpen={isAlertOpenSuccess} message="성공적으로 게시했어요" severity="success"></Popup>
 
         </Stack>
     );
