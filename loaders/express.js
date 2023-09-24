@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import helmet from "helmet"
 import { engine } from 'express-handlebars';
 
 
@@ -18,6 +19,16 @@ export async function init (app) {
     app.set("view engine", "hbs");    
     app.set('views','./client/views');
     app.disable('x-powered-by');
+
+    app.use(helmet({
+        contentSecurityPolicy: {
+            directives: {
+                "script-src": ["'self'", "*.jsdelivr.net", "'unsafe-inline'", "'unsafe-eval'"],
+                'img-src': ["'self'", 'data:', 'blob:', '*.daumcdn.net', '*.kakaocdn.net'],
+
+            },
+        },
+    }));
     
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended : true}));
