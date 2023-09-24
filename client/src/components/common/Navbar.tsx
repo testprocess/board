@@ -3,6 +3,8 @@ import { Box, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/mater
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
 
+import EditIcon from '@mui/icons-material/Edit';
+
 
 function Navbar({ children }: any) {
   const dispatch = useDispatch();
@@ -34,9 +36,13 @@ function ButtonBox({ isLogin }) {
   if (isLogin) {
     return (
       <Box sx={{ justifyContent: 'center' }}>
+        <Link to={'/write'}>
+          <Button variant="text" disableElevation><EditIcon sx={{ fontSize: "1.3rem"  }} /></Button>
+        </Link>
         <Link to={'/profile'}>
           <Button variant="text" disableElevation>프로필</Button>
         </Link>
+
       </Box>
     );
   }

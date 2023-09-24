@@ -15,6 +15,7 @@ import LoginSelect from './pages/LoginSelect'
 import NotfoundPage from './pages/Notfound'
 import MyProfilePage from './pages/MyProfile'
 import ProfilePage from './pages/UserProfile'
+import WritePage from './pages/Write'
 
 import ContentPage from './pages/Content'
 
@@ -50,6 +51,11 @@ const App = () => {
                             />
                             
 
+                            <Route
+                                path="/write"
+                                render={() => (isLogin ? <WritePage />  : <Redirect to={"/auth/select"} />)}
+                            />
+                            
 
                             <Route path="/feed/*" component={ContentPage} />
                             <Route path="/@*" component={ProfilePage} />

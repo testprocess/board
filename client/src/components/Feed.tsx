@@ -69,7 +69,6 @@ function Feed() {
 
     useEffect(() => {
         if (!fetchingStop) {
-            dispatch(clear({}))
             loadFeedData()  
         }
     }, [fetching])
@@ -81,19 +80,6 @@ function Feed() {
         <FeedBody feed={feed}></FeedBody>
 
     ))
-
-    if (isLogin) {
-        return (
-            <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
-                <Grid item xs={12} md={6}>
-                    <FeedInput></FeedInput>
-
-                    {feedsResult}
-                    <FeedSkeleton></FeedSkeleton>
-                </Grid>
-            </Grid>
-        );
-    }
 
     return (
         <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
@@ -430,4 +416,4 @@ function FeedSkeleton() {
 }
   
 export default Feed;
-export { FeedBody }
+export { FeedBody, FeedInput }

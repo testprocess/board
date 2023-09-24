@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 
 import axios from "axios"
 import Cookies from 'js-cookie'
-import Navbar from './common/Navbar'
+import Navbar, { ButtonBox } from './common/Navbar'
 import EditIcon from '@mui/icons-material/Edit';
 import { toggleDarkmode } from "../features/appSlice";
 
@@ -21,6 +21,7 @@ function Profile() {
     const [dialogTrigger, setDialogTrigger] = useState(0)
 
     const userId = useSelector((state: any) => state.auth.userId);
+    const isLogin = useSelector((state: any) => state.auth.isLogin);
 
     const handleWithdrawal = () => {
         UserAPI.remove(userId)
@@ -44,9 +45,8 @@ function Profile() {
             </Grid>
             <Grid item xs={10} md={6} sx={{ marginTop: "6rem" }}>
                 <Navbar>
-                    <Link to={'/profile'}>
-                        <Button variant="text" disableElevation>프로필</Button>
-                    </Link>
+                    <ButtonBox isLogin={isLogin}></ButtonBox>
+
                 </Navbar>
 
                 <ProfileDisplayName></ProfileDisplayName>
