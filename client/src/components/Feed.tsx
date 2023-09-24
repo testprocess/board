@@ -36,38 +36,39 @@ function Feed() {
         }
     }
 
+    const loadFeedData = async () => {
+        let getFeeds = await FeedAPI.getFeed(fetching, {
+            isrange: 'true',
+            range: 10,
+            order: "DESC"
+        })
+
+        if (getFeeds.data.result.length == 0) {
+            setFetchingStop(true)
+        }
+
+        for (let index = 0; index < getFeeds.data.result.length; index++) {
+            const element = getFeeds.data.result[index];
+
+            dispatch(push({
+                idx: element.idx, 
+                content: element.content, 
+                owner: element.owner, 
+                date: element.date, 
+                type: element.type, 
+            }))
+        }
+    };
+
     useEffect(() => {
         dispatch(clear({}))
 
     }, [])
+
     
 
     useEffect(() => {
         if (!fetchingStop) {
-            const loadFeedData = async () => {
-                let getFeeds = await FeedAPI.getFeed(fetching, {
-                    isrange: 'true',
-                    range: 10,
-                    order: "DESC"
-                })
-    
-                if (getFeeds.data.result.length == 0) {
-                    setFetchingStop(true)
-                }
-
-                for (let index = 0; index < getFeeds.data.result.length; index++) {
-                    const element = getFeeds.data.result[index];
-    
-                    dispatch(push({
-                        idx: element.idx, 
-                        content: element.content, 
-                        owner: element.owner, 
-                        date: element.date, 
-                        type: element.type, 
-                    }))
-                }
-            };
-    
             loadFeedData()  
         }
     }, [fetching])
@@ -75,29 +76,15 @@ function Feed() {
 
     document.addEventListener('scroll', handleScroll)
 
-    if (isLogin) {
-        return (
-            <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
-                <Grid item xs={12} md={6}>
-                    <FeedInput></FeedInput>
+    const feedsResult = feeds.map(feed => (
+        <FeedBody feed={feed}></FeedBody>
 
-                    {feeds.map(feed => (
-                        <FeedBody feed={feed}></FeedBody>
-    
-                    ))}
-                    <FeedSkeleton></FeedSkeleton>
-                </Grid>
-            </Grid>
-        );
-    }
+    ))
 
     return (
         <Grid container sx={{ marginTop: "1rem" }} justifyContent="center" spacing={3}>
             <Grid item xs={12} md={6}>
-                {feeds.map(feed => (
-                    <FeedBody feed={feed}></FeedBody>
-
-                ))}
+                {feedsResult}
                 <FeedSkeleton></FeedSkeleton>
             </Grid>
         </Grid>
@@ -114,6 +101,8 @@ function FeedInput(props) {
 
     const [input, setInput] = useState('')
     const [isAlertOpen, setAlertOpen] = useState(false)
+    const [isAlertOpenSuccess, setAlertOpenSuccess] = useState(false)
+
 
     const handleChange = (e) => {
         setInput(e.target.value)
@@ -135,8 +124,15 @@ function FeedInput(props) {
         FeedAPI.insertFeed(input)
         setInput('')
 
+        setAlertOpenSuccess(true)
+        setTimeout(() => {
+            setAlertOpenSuccess(false)
+        }, 100)
+        
+
         setTimeout(() => {
             patchFeed()
+
         }, 500)
     }
 
@@ -147,6 +143,7 @@ function FeedInput(props) {
             order: "DESC"
         })
 
+
         dispatch(unshift({
             idx: getFeeds.data.result[0].idx, 
             content: getFeeds.data.result[0].content, 
@@ -154,6 +151,7 @@ function FeedInput(props) {
             date: getFeeds.data.result[0].date, 
             type: getFeeds.data.result[0].type 
         }))
+
     }
     
 
@@ -170,6 +168,7 @@ function FeedInput(props) {
             <Typography sx={{ fontSize: "0.8rem", textAlign: 'right', color: input.length < 990 ? "text.primary" : "#fc4242"  }}>{input.length}/1000</Typography>
             <Button variant="contained" onClick={handleClick} disableElevation><SendIcon /> </Button>
             <Popup isOpen={isAlertOpen} message="길이가 너무 길어요" severity="info"></Popup>
+            <Popup isOpen={isAlertOpenSuccess} message="성공적으로 게시했어요" severity="success"></Popup>
 
         </Stack>
     );
@@ -203,6 +202,8 @@ function FeedBody({ feed }) {
         const lines = splitLines().slice(0, 30).join('\n')
         return lines
     }
+
+
 
     return (
         <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
@@ -255,6 +256,32 @@ function FeedProfile({ feed }) {
     const dateSplit = feed.date.split('.')
 
 
+    const getElapsedTime = () => {
+        const feedTime = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2], dateSplit[3], dateSplit[4], dateSplit[5]).getTime()
+        const nowTime = new Date().getTime()
+
+        const calcTime = {
+            "년 전": 1000 * 60 * 60 * 24 * 365,
+            "달 전": 1000 * 60 * 60 * 24 * 30,
+            "일 전": 1000 * 60 * 60 * 24,
+            "시간 전": 1000 * 60 * 60,
+            "분 전": 1000 * 60
+        }
+
+        for (const key in calcTime) {
+            if (Object.prototype.hasOwnProperty.call(calcTime, key)) {
+                const element = calcTime[key];
+
+                const diffTime = Math.floor((nowTime - feedTime) / calcTime[key])
+                if (diffTime > 0) {
+                    return `${diffTime}${key}`
+                }
+            }
+        }
+        return "방금 전"
+    }
+
+
     return (
         <Box sx={{ flexGrow: 1, overflow: 'hidden', marginBottom: "1rem", alignContent: 'center' }}>
             <Grid container wrap="nowrap" spacing={2} sx={{ alignContent: 'center', alignItems: 'center' }}>
@@ -270,7 +297,7 @@ function FeedProfile({ feed }) {
                 <Typography sx={{ fontSize: '1rem' }} noWrap>{feed.owner.userDisplayName}</Typography>
 
                 </Link>
-                    <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{new Date(dateSplit[0], dateSplit[1], dateSplit[2], dateSplit[3], dateSplit[4], dateSplit[5]).toDateString()}</Typography>
+                    <Typography sx={{ fontSize: '0.7rem' }} color="text.secondary" noWrap>{getElapsedTime()}</Typography>
 
                 </Grid>
                 <Grid item xs zeroMinWidth sx={{ justifyContent: 'flex-end',  }}>
@@ -389,4 +416,4 @@ function FeedSkeleton() {
 }
   
 export default Feed;
-export { FeedBody }
+export { FeedBody, FeedInput }

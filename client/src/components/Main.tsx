@@ -3,7 +3,7 @@ import { Button, Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
 
-import Navbar from './common/Navbar'
+import Navbar, { ButtonBox } from './common/Navbar'
 
 function Main() {
     const isLogin = useSelector((state: any) => state.auth.isLogin);
@@ -38,27 +38,5 @@ function Main() {
 }
 
 
-function ButtonBox({ isLogin }) {
 
-    if (isLogin) {
-        return (
-            <Box sx={{ justifyContent: 'center' }}>
-                <Link to={'/profile'}>
-                    <Button variant="text" disableElevation>프로필</Button>
-                </Link>
-            </Box>
-
-        );
-    }
-
-    return (
-        <Box sx={{ justifyContent: 'center' }}>
-            <Link to={'/auth/select'}>
-                <Button variant="text" disableElevation>로그인 </Button>
-            </Link>
-        </Box>
-
-    );
-}
-  
 export default Main;

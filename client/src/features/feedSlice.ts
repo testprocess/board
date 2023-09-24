@@ -17,7 +17,7 @@ type state = {
 }
 
 const initialState: state = {
-    feeds: [{idx: 0, content: '.', owner: { userId: '', userDisplayName: ''}, date: '', type: 0}]
+    feeds: []
 }
 
 const feedSlice = createSlice({
@@ -29,9 +29,10 @@ const feedSlice = createSlice({
         },
         unshift(state, action) {
             state.feeds.unshift(action.payload)
+            console.log(state.feeds, initialState)
         },
         clear(state, action) {
-            state.feeds = [{idx: 0, content:'', owner: { userId: '', userDisplayName: ''}, date: '', type: 0}]
+            state.feeds = []
         },
         remove(state, action) {
             const feedWithIdx = state.feeds.findIndex((obj) => obj.idx === action.payload.idx);
